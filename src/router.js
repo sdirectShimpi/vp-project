@@ -2,6 +2,7 @@ import React from "react";
 import { createBrowserRouter } from "react-router-dom";
 import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
 import Login from "./auth/login/Login";
+import Calendar from "./layout/Calendar";
 import PrivateRoute from "./layout/Dashbord/PrivateRoute";
 import FormLayout from "./layout/FormLayout";
 import ECommerce from "./layout/Page/ECommerce";
@@ -36,6 +37,12 @@ export const router = createBrowserRouter([
       {
         path: "settings",
         element: <Settings />,
+        exact: true,
+      },
+
+      {
+        path: "Calendar",
+        element: <Calendar />,
         exact: true,
       },
       {
