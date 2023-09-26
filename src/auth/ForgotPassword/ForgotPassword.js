@@ -118,7 +118,7 @@ const ForgotPassword = () => {
             </div>
 
             <div className="flex items-center justify-between">
-              <div className="flex items-center">
+              {/* <div className="flex items-center">
                 <input
                   id="remember-me"
                   name="remember-me"
@@ -132,7 +132,7 @@ const ForgotPassword = () => {
                   {" "}
                   Remember me{" "}
                 </label>
-              </div>
+              </div> */}
 
               {/* <div className="text-sm">
               <Link to={'/forgot'}><a href="/" className="font-medium text-red-600 hover:text-red-500"> Forgot your password? </a></Link>
@@ -142,7 +142,8 @@ const ForgotPassword = () => {
             <div>
               <button
                 type="submit"
-                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                // className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
               >
                 <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                   <svg
