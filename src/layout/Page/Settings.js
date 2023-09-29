@@ -80,6 +80,7 @@ const Settings = () => {
     const userinfo = JSON.parse(localStorage.getItem("userInfo"));
     const userId = userinfo[0]._id;
     const response = await dispatch(getActions.getRecord({ userId: userId }));
+    console.log( "response",response.payload.data.data)
     if (getActions.getRecord.fulfilled.match(response)) {
       setState(response.payload.data.data);
     } else {

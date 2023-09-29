@@ -1,6 +1,34 @@
 // import Breadcrumb from '../components/Breadcrumb';
+import { useState,useEffect } from "react";
+import axios  from "axios";
+
 
 const Calendar = () => {
+
+
+  const [totalLeave, seTotalLeave] = useState([]);
+  const baseUrl = process.env.REACT_APP_API_URL;
+
+  const getLeave= async () => {
+    try {
+      const userinfo = JSON.parse(localStorage.getItem("userInfo"));
+    const userId = userinfo[0]._id;
+      const response = await axios.get(`${baseUrl}/getLeaveDetails/${userId}`);
+      console.log("leave",response)
+      seTotalLeave(response.data.data.data[0].totalProject);
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  console.log("totalProject", totalLeave)
+
+  useEffect(() => {
+    getLeave()
+    }, []);
+
+
+
   return (
     <>
       {/* <Breadcrumb pageName="Calendar" /> */}

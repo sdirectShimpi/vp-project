@@ -21,7 +21,7 @@ const ForgotPassword = () => {
           toast.error(" esetPassword failed. Invalid credentials.");
         }
 
-        navigate("/Login");
+        navigate("/");
       })
       .catch((err) => {
         console.log(err);
@@ -53,6 +53,7 @@ const ForgotPassword = () => {
           background: "rgb(243 244 246)",
           width: "fit-content",
           marginTop: "5%",
+          border: "2px solid #000"
         }}
       >
         <ToastContainer
@@ -74,7 +75,7 @@ const ForgotPassword = () => {
             </h2>
             <p className="mt-2 text-center text-sm text-gray-600">
               Or
-              <Link to={"/Login"}>
+              <Link to={"/"}>
                 <a
                   href="/"
                   className="font-medium text-red-600 hover:text-red-500"

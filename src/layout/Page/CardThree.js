@@ -14,7 +14,7 @@ const CardThree = () => {
       const userinfo = JSON.parse(localStorage.getItem("userInfo"));
     const userId = userinfo[0]._id;
       const response = await axios.get(`${baseUrl}/getPorjectRecord/${userId}`);
-      console.log("gkhjkioplikp",response.data.data[0].activeProject)
+      console.log("gkhjkioplikp",response.data.data.data[0].activeProject)
       setActiveProject(response.data.data.data[0].activeProject);
 
     } catch (err) {
@@ -31,7 +31,7 @@ const CardThree = () => {
     return (
       <div className="rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
-          <svg
+          {/* <svg
             className="fill-primary dark:fill-white"
             width="22"
             height="22"
@@ -47,18 +47,23 @@ const CardThree = () => {
               d="M14.3345 5.29375C13.922 5.39688 13.647 5.80938 13.7501 6.22188C13.7845 6.42813 13.8189 6.63438 13.8189 6.80625C13.8189 8.35313 12.547 9.625 11.0001 9.625C9.45327 9.625 8.1814 8.35313 8.1814 6.80625C8.1814 6.6 8.21577 6.42813 8.25015 6.22188C8.35327 5.80938 8.07827 5.39688 7.66577 5.29375C7.25327 5.19063 6.84077 5.46563 6.73765 5.87813C6.6689 6.1875 6.63452 6.49688 6.63452 6.80625C6.63452 9.2125 8.5939 11.1719 11.0001 11.1719C13.4064 11.1719 15.3658 9.2125 15.3658 6.80625C15.3658 6.49688 15.3314 6.1875 15.2626 5.87813C15.1595 5.46563 14.747 5.225 14.3345 5.29375Z"
               fill=""
             />
-          </svg>
+          </svg> */}
+
+<svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M31.8752 24.65H31.5564V9.19062C31.5564 7.96875 30.5471 6.90625 29.2721 6.90625H26.4033C25.1814 6.90625 24.1189 7.91562 24.1189 9.19062V24.65H20.7189V12.1656C20.7189 10.9437 19.7096 9.88125 18.4346 9.88125H15.5658C14.3439 9.88125 13.2814 10.8906 13.2814 12.1656V24.65H9.82832V15.6187C9.82832 14.3969 8.81895 13.3344 7.54395 13.3344H4.6752C3.45332 13.3344 2.39082 14.3437 2.39082 15.6187V24.65H2.1252C1.4877 24.65 0.90332 25.1813 0.90332 25.8719C0.90332 26.5625 1.43457 27.0938 2.1252 27.0938H31.8752C32.5127 27.0938 33.0971 26.5625 33.0971 25.8719C33.0971 25.1813 32.5127 24.65 31.8752 24.65ZM4.83457 24.65V15.7781H7.4377V24.65H4.83457ZM15.6721 24.65V12.325H18.2752V24.65H15.6721ZM26.5627 24.65V9.35H29.1658V24.65H26.5627V24.65Z" fill="#3C50E0"></path>
+                </svg>
+          
         </div>
   
         <div className="mt-4 flex items-end justify-between">
           <div>
             <h4 className="text-title-md font-bold text-black dark:text-white">
-              2.450
+             {activeProject}
             </h4>
             <span className="text-sm font-medium">Active Project</span>
           </div>
   
-          <span className="flex items-center gap-1 text-sm font-medium text-meta-3">
+          {/* <span className="flex items-center gap-1 text-sm font-medium text-meta-3">
           {activeProject}
             <svg
               className="fill-meta-3"
@@ -73,7 +78,7 @@ const CardThree = () => {
                 fill=""
               />
             </svg>
-          </span>
+          </span> */}
         </div>
       </div>
     );

@@ -29,7 +29,7 @@ const ECommerce = () => {
           <CardOne />
           <CardTwo />
           <ChartThree />
-          <CardFour />
+          {/* <CardFour /> */}
         </div>
       )}
     </>

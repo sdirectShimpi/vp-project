@@ -4,8 +4,10 @@ import ForgotPassword from "./auth/ForgotPassword/ForgotPassword";
 import Login from "./auth/login/Login";
 import Calendar from "./layout/Calendar";
 import PrivateRoute from "./layout/Dashbord/PrivateRoute";
+import Editer from "./layout/Editor";
 import FormLayout from "./layout/FormLayout";
 import ECommerce from "./layout/Page/ECommerce";
+import Inbox from "./layout/Page/Inbox";
 import Profile from "./layout/Page/Profile";
 import Settings from "./layout/Page/Settings";
 import PageNotFound from "./PageNotFound";
@@ -49,8 +51,20 @@ export const router = createBrowserRouter([
         path :"form",
         element:<FormLayout/>,
         exact: true
-      }
+      },
 
+
+      {
+        path :"editer",
+        element:<Editer/>,
+        exact: true
+      },
+
+      {
+        path :"inbox",
+        element:<Inbox/>,
+        exact: true
+      }
 
     ],
   },

@@ -60,7 +60,7 @@ const DropdownUser = () => {
       const userinfo = JSON.parse(localStorage.getItem("userInfo"));
     const userId = userinfo[0]._id;
       const response = await axios.get(`${baseUrl}/getUser/${userId}`);
-      console.log("response",response)
+      console.log("getuser",response)
       setUploadImage(response.data.data);
 
     } catch (err) {
@@ -89,9 +89,9 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+         {uploadImage.name}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          <span className="block text-xs">{uploadImage.role}</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
