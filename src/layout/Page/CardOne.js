@@ -11,7 +11,7 @@ const CardOne = () => {
       const userinfo = JSON.parse(localStorage.getItem("userInfo"));
     const userId = userinfo[0]._id;
       const response = await axios.get(`${baseUrl}/getPorjectRecord/${userId}`);
-      console.log("await",response)
+      console.log("cardOne",response)
        seTotalProject(response.data.data.data[0].totalProject);
 
     } catch (err) {
@@ -51,13 +51,7 @@ const CardOne = () => {
 
 
         
-
-
-
-
-
-  
-        <div className="mt-4 flex items-end justify-between">
+   <div className="mt-4 flex items-end justify-between">
           <div>
             <h4 className="text-title-md font-bold text-black dark:text-white">
             {totalProject}

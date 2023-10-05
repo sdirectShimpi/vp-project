@@ -4,11 +4,13 @@ import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../assets/img/logo.svg';
 import { useDispatch } from 'react-redux';
 import { useNavigate, Link } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
 import { authActions } from "../../store/slice";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const navigate = useNavigate(); 
@@ -21,24 +23,71 @@ const Login = () => {
 const url = process.env.REACT_APP_API_URL;
   
 
-  const handleLogin = async (values) => {
-    console.log("values", values);
-    const response = await dispatch(authActions.login(values));
-    if (authActions.login.fulfilled.match(response)) {
-      toast.success("Login successful!");
-      console.log("respomse",response)
-      localStorage.setItem('islogin', true);
-         localStorage.setItem('token', response.payload.data.data.loginToken);
-        localStorage.setItem("userInfo",  JSON.stringify(response.payload.data.data.userRecords))
+  // const handleLogin = async (values) => {
+  //   console.log("values", values);
+  //   const response = await dispatch(authActions.login(values));
+  //   if (authActions.login.fulfilled.match(response)) {
+  //     // toast.success("Login successful!");
+  //     console.log("respomse",response)
+  //     localStorage.setItem('islogin', true);
+  //        localStorage.setItem('token', response.payload.data.data.loginToken);
+  //       localStorage.setItem("userInfo",  JSON.stringify(response.payload.data.data.userRecords))
        
-      navigate('/admin')
+  //     navigate('/admin')
    
-  } else {
-    toast.error("An error occurred while logged in.")
-  }
-    console.log(response)
+  // } else {
+
+  //  
+  //   toast.error("An error occurred while logged in.")
+  // }
+  //   console.log(response)
  
+  // };
+
+
+  const handleLogin = async (values) => {
+    try {
+      console.log("values", values);
+      const response = await dispatch(authActions.login(values));
+console.log("response",response)
+      if (authActions.login.fulfilled.match(response)) {
+        // Login successful
+        localStorage.setItem('islogin', true);
+        localStorage.setItem('token', response.payload.data.data.loginToken);
+        localStorage.setItem("userInfo", JSON.stringify(response.payload.data.data.userRecords));
+        navigate('/admin');
+  
+        
+        toast.success("Login successful!");
+      } else {
+      
+        if (response.error) {
+          
+          toast.error("Unauthorized User!");
+        }
+      }
+  
+      console.log(response);
+    } catch (error) {
+      // Display an error toast message for exceptions
+      toast.error("An error occurred while logging in.");
+      console.error("Error during login:", error);
+    }
   };
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
    // axios
     //   .post(`${url}/loginUser`, values)
     //   .then((res) => {
@@ -199,6 +248,20 @@ const url = process.env.REACT_APP_API_URL;
     <div className="flex flex-wrap items-center">
       <div className="hidden w-full xl:block xl:w-1/2">
         <div className="py-17.5 px-26 text-center">
+
+        <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+
           {/* <Link className="mb-5.5 inline-block" to="/">
             <img  src={Logo} alt="Logo" />
             <img className="dark:hidden" src={Logo} alt="Logo" />

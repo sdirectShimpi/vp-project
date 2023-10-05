@@ -7,6 +7,8 @@ import Loader from "react-js-loader";
 const Editor = () => {
   const [editorContent, setEditorContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [applyDate, setApplyDate] = useState(""); 
+  const [leaveContent, setLeaveContent] = useState("");
   const baseUrl = process.env.REACT_APP_API_URL;
 
   const modules = {
@@ -89,26 +91,54 @@ const Editor = () => {
     setEditorContent(content);
   };
 
+  // const handleApplyClick = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const response = await axios.post(`${baseUrl}/sendContent`, {
+  //       applyDate,
+  //       leaveContent,
+  //     });
+  //     // const response = await axios.post(
+  //     //   `${baseUrl}/sendContent`,
+  //     //   editorContent
+  //     // );
+  //     console.log("vcxvcx",response)
+  //     if(response.data.statusCode==200)
+  //     {
+  //       setIsLoading(false);
+  //     }
+  //     console.log("response", response);
+  //     setEditorContent(response);
+  //   } catch (err) {
+      
+  //     console.log(err);
+  //   }
+
+  //   console.log("Send content:", editorContent);
+  // };
+
+
+
+
+
+
   const handleApplyClick = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.post(
-        `${baseUrl}/sendContent`,
-        editorContent
-      );
-      console.log("vcxvcx",response)
-      if(response.data.statusCode==200)
-      {
+      const response = await axios.post(`${baseUrl}/sendContent`, {
+        htmlContent: editorContent, 
+        applyDate,
+        leaveContent,
+      });
+      console.log("vcxvcx", response);
+      if (response.status === 200) {
         setIsLoading(false);
       }
       console.log("response", response);
-      setEditorContent(response);
+      setEditorContent(""); 
     } catch (err) {
-      
       console.log(err);
     }
-
-    console.log("Send content:", editorContent);
   };
 
 
@@ -119,67 +149,67 @@ const Editor = () => {
   console.log("content", editorContent);
 
   return (
-    <>
-      <div>
-        <h1 style={{ textAlign: "center", width: "" }}></h1>
-        {isLoading && (
-  <Loader
-    type="spinner-cub"
-    bgColor="#7BADE2"
-    title="spinner-cub"
-    color="#FFFFFF"
-    size={100}
-    style={{ marginTop: "50%" }}
-  />
-)}
-        <div style={{ display: "grid", justifyContent: "center" }}>
-          <ReactQuill
-            theme="snow"
-            modules={modules}
-            formats={formats}
-            value={editorContent}
-            placeholder="Write your content ...."
-            onChange={setEditorContent}
-            style={{ height: "300px", width: "900px" }}
-          />
-        </div>
-      </div>
-      <br />
-      <br />
-      <button
-        className="btn btn-primary"
-        onClick={handleApplyClick}
-        style={{
-          width: "90px",
-          backgroundColor: "#000080",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          padding: "10px",
-          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-          cursor: "pointer",
-        }}
-      >
-        Send
-      </button>{" "}
-      &nbsp; &nbsp;
-      <button
-        className="btn btn-primary"
-        onClick={handleCancelClick}
-        style={{
-          width: "90px",
-          backgroundColor: "#000080",
-          color: "white",
-          border: "none",
-          borderRadius: "5px",
-          padding: "10px",
-          boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-          cursor: "pointer",
-        }}
-      >
-        Clear
-      </button>
-    </>
+    <div>
+      <h1 style={{ textAlign: "center", width: "" }}></h1>
+      {isLoading && (
+        <Loader
+          type="spinner-cub"
+          bgColor="#7BADE2"
+          title="spinner-cub"
+          color="#FFFFFF"
+          size={50}
+        />
+      )}
+
+    
+          <div style={{ display: "grid", justifyContent: "center" }}>
+            <ReactQuill
+              theme="snow"
+              modules={modules}
+              formats={formats}
+              value={editorContent}
+              placeholder="Write your content ...."
+              onChange={setEditorContent}
+              style={{ height: "300px", width: "900px" }}
+            />
+          </div>
+          <br />
+          <br />
+          <button
+            className="btn btn-primary"
+            onClick={handleApplyClick}
+            style={{
+              width: "90px",
+              backgroundColor: "#000080",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              padding: "10px",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+              cursor: "pointer",
+            }}
+          >
+            Send
+          </button>
+          &nbsp; &nbsp;
+          <button
+            className="btn btn-primary"
+            onClick={handleCancelClick}
+            style={{
+              width: "90px",
+              backgroundColor: "#000080",
+              color: "white",
+              border: "none",
+              borderRadius: "5px",
+              padding: "10px",
+              boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+              cursor: "pointer",
+            }}
+          >
+            Clear
+          </button>
+
+    </div>
   );
 };
 

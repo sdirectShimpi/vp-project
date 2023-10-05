@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link , useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 import UserOne from '../images/user/user-01.png';
 
@@ -46,7 +49,7 @@ const DropdownUser = () => {
 
   const handleLogout =() =>{
     localStorage.clear()
-    navigate('/login')
+    navigate('/')
 
   }
 
@@ -79,7 +82,18 @@ const DropdownUser = () => {
   return (
     <div className="relative">
 
-
+<ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       
       <Link
         ref={trigger}
@@ -155,7 +169,7 @@ const DropdownUser = () => {
             </Link>
           </li>
           <li>
-            <Link
+            {/* <Link
               to="#"
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
             >
@@ -173,7 +187,7 @@ const DropdownUser = () => {
                 />
               </svg>
               My Contacts
-            </Link>
+            </Link> */}
           </li>
           <li>
             <Link

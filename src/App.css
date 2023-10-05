@@ -42,3 +42,15 @@
 margin-left: 20%;
 
 }
+
+.sl-spinner1{
+  position: absolute !important;
+  left:0;
+  right:0;
+  top: 50%
+}
+
+
+/* .sl-spinner1 .sl-loader .sl-loader-items {
+margin-top: 100% !important;
+} */
