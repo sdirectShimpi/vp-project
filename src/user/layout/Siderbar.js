@@ -1,94 +1,167 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+// import Logo from '../images/logo/logo.svg';
+import SidebarLinkGroup from "../../layout/SidebarLinkGroup";
+//import SidebarLinkGroup from "./SidebarLinkGroup";
+//import sdmlogo from "../assets/img/logo.svg";
+import sdmlogo from "../../assets/img/logo.svg"
+// interface SidebarProps {
+//   sidebarOpen: boolean;
+//   setSidebarOpen: (arg: boolean) => void;
+// }
 
-const Siderbar = () => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+  const location = useLocation();
+  const { pathname } = location;
+
+  const trigger = useRef(null);
+  const sidebar = useRef(null);
+
+  const storedSidebarExpanded = localStorage.getItem("sidebar-expanded");
+  const [sidebarExpanded, setSidebarExpanded] = useState(
+    storedSidebarExpanded === null ? false : storedSidebarExpanded === "true"
+  );
+
+  useEffect(() => {
+    localStorage.setItem("sidebar-expanded", sidebarExpanded.toString());
+    if (sidebarExpanded) {
+      document.querySelector("body")?.classList.add("sidebar-expanded");
+    } else {
+      document.querySelector("body")?.classList.remove("sidebar-expanded");
+    }
+  }, [sidebarExpanded]);
+
   return (
- <>
- <body class="bg-blue-600">
-    <span
-      class="absolute text-white text-4xl top-5 left-4 cursor-pointer"
-      onclick="openSidebar()"
+    <aside
+      ref={sidebar}
+      className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-white duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${
+        sidebarOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
     >
-      <i class="bi bi-filter-left px-2 bg-gray-900 rounded-md"></i>
-    </span>
-    <div
-      class="sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-[300px] overflow-y-auto text-center bg-gray-50"
-    >
-    
-
-      <div class="text-gray-100 text-xl">
-        <div class="p-2.5 mt-1 flex items-center">
-          <i class="bi bi-app-indicator px-2 py-1 rounded-md bg-blue-600"></i>
-          <h1 class="font-bold text-gray-900 text-[15px] ml-3">TailwindCSS</h1>
-          <i
-            class="bi bi-x cursor-pointer ml-28 lg:hidden"
-            onclick="openSidebar()"
-          ></i>
-        </div>
-        <div class="my-2 bg-gray-600 h-[1px]"></div>
-      </div>
-      <div
-        class="p-2.5 flex items-center rounded-md px-4 duration-300 cursor-pointer bg-gray-700 text-white"
-      >
-        <i class="bi bi-search text-sm"></i>
-        <input
-          type="text"
-          placeholder="Search"
-          class="text-[15px] ml-4 w-full bg-transparent focus:outline-none"
+      <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
+        <img
+          src={sdmlogo}
+          style={{ width: "1000px", height: "50px" }}
+          alt="lago"
         />
-      </div>
-      <div
-        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-      >
-        <i class="bi bi-house-door-fill"></i>
-        <span class="text-[15px] ml-4 text-gray-900 font-bold">Home</span>
-      </div>
-      <div
-        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-      >
-        <i class="bi bi-bookmark-fill"></i>
-        <span class="text-[15px] ml-4 text-gray-900 font-bold">Bookmark</span>
-      </div>
-      <div class="my-4 bg-gray-600 h-[1px]"></div>
-      <div
-        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-        onclick="dropdown()"
-      >
-        <i class="bi bi-chat-left-text-fill"></i>
-        <div class="flex justify-between w-full items-center">
-          <span class="text-[15px] ml-4 text-gray-900 font-bold">Chatbox</span>
-          <span class="text-sm rotate-180" id="arrow">
-            <i class="bi bi-chevron-down"></i>
-          </span>
-        </div>
-      </div>
-      {/* <div
-        class="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold"
-        id="submenu"
-      >
-        <h1 class="cursor-pointer p-2 hover:bg-blue-600 rounded-md mt-1">
-          Social
-        </h1>
-        <h1 class="cursor-pointer p-2 hover:bg-blue-900 rounded-md mt-1">
-          Personal
-        </h1>
-        <h1 class="cursor-pointer p-2 hover:bg-blue-900 rounded-md mt-1">
-          Friends
-        </h1>
-      </div> */}
-      <div
-        class="p-2.5 mt-3 flex items-center rounded-md px-4 duration-300 cursor-pointer hover:bg-blue-600 text-white"
-      >
-        <i class="bi bi-box-arrow-in-right"></i>
-        <span class="text-[15px] ml-4 text-gray-900 font-bold">Logout</span>
-      </div>
-    </div>
 
-    
-  </body>
- 
- 
- </>
-  )
-}
+        <button
+          ref={trigger}
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          aria-controls="sidebar"
+          aria-expanded={sidebarOpen}
+          className="block lg:hidden"
+        >
+          <svg
+            className="fill-current"
+            width="20"
+            height="18"
+            viewBox="0 0 20 18"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M19 8.175H2.98748L9.36248 1.6875C9.69998 1.35 9.69998 0.825 9.36248 0.4875C9.02498 0.15 8.49998 0.15 8.16248 0.4875L0.399976 8.3625C0.0624756 8.7 0.0624756 9.225 0.399976 9.5625L8.16248 17.4375C8.31248 17.5875 8.53748 17.7 8.76248 17.7C8.98748 17.7 9.17498 17.625 9.36248 17.475C9.69998 17.1375 9.69998 16.6125 9.36248 16.275L3.02498 9.8625H19C19.45 9.8625 19.825 9.4875 19.825 9.0375C19.825 8.55 19.45 8.175 19 8.175Z"
+              fill=""
+            />
+          </svg>
+        </button>
+      </div>
 
-export default Siderbar
+      <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
+        <nav className="mt-5 py-4 px-4 lg:mt-9 lg:px-6">
+          <div>
+            <ul className="mb-6 flex flex-col gap-1.5">
+              <SidebarLinkGroup
+                activeCondition={
+                  pathname === "/" || pathname.includes("dashboard")
+                }
+              >
+                {(handleClick, open) => {
+                  return (
+                    <React.Fragment>
+                      <li>
+                        <NavLink
+                          to="/admin/ecom"
+                          className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-black duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                            pathname.includes("profile") &&
+                            "bg-graydark dark:bg-meta-4"
+                          }`}
+                        >
+                          <svg
+                            class="fill-current"
+                            width="18"
+                            height="18"
+                            viewBox="0 0 18 18"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M6.10322 0.956299H2.53135C1.5751 0.956299 0.787598 1.7438 0.787598 2.70005V6.27192C0.787598 7.22817 1.5751 8.01567 2.53135 8.01567H6.10322C7.05947 8.01567 7.84697 7.22817 7.84697 6.27192V2.72817C7.8751 1.7438 7.0876 0.956299 6.10322 0.956299ZM6.60947 6.30005C6.60947 6.5813 6.38447 6.8063 6.10322 6.8063H2.53135C2.2501 6.8063 2.0251 6.5813 2.0251 6.30005V2.72817C2.0251 2.44692 2.2501 2.22192 2.53135 2.22192H6.10322C6.38447 2.22192 6.60947 2.44692 6.60947 2.72817V6.30005Z"
+                              fill=""
+                            ></path>
+                            <path
+                              d="M15.4689 0.956299H11.8971C10.9408 0.956299 10.1533 1.7438 10.1533 2.70005V6.27192C10.1533 7.22817 10.9408 8.01567 11.8971 8.01567H15.4689C16.4252 8.01567 17.2127 7.22817 17.2127 6.27192V2.72817C17.2127 1.7438 16.4252 0.956299 15.4689 0.956299ZM15.9752 6.30005C15.9752 6.5813 15.7502 6.8063 15.4689 6.8063H11.8971C11.6158 6.8063 11.3908 6.5813 11.3908 6.30005V2.72817C11.3908 2.44692 11.6158 2.22192 11.8971 2.22192H15.4689C15.7502 2.22192 15.9752 2.44692 15.9752 2.72817V6.30005Z"
+                              fill=""
+                            ></path>
+                            <path
+                              d="M6.10322 9.92822H2.53135C1.5751 9.92822 0.787598 10.7157 0.787598 11.672V15.2438C0.787598 16.2001 1.5751 16.9876 2.53135 16.9876H6.10322C7.05947 16.9876 7.84697 16.2001 7.84697 15.2438V11.7001C7.8751 10.7157 7.0876 9.92822 6.10322 9.92822ZM6.60947 15.272C6.60947 15.5532 6.38447 15.7782 6.10322 15.7782H2.53135C2.2501 15.7782 2.0251 15.5532 2.0251 15.272V11.7001C2.0251 11.4188 2.2501 11.1938 2.53135 11.1938H6.10322C6.38447 11.1938 6.60947 11.4188 6.60947 11.7001V15.272Z"
+                              fill=""
+                            ></path>
+                            <path
+                              d="M15.4689 9.92822H11.8971C10.9408 9.92822 10.1533 10.7157 10.1533 11.672V15.2438C10.1533 16.2001 10.9408 16.9876 11.8971 16.9876H15.4689C16.4252 16.9876 17.2127 16.2001 17.2127 15.2438V11.7001C17.2127 10.7157 16.4252 9.92822 15.4689 9.92822ZM15.9752 15.272C15.9752 15.5532 15.7502 15.7782 15.4689 15.7782H11.8971C11.6158 15.7782 11.3908 15.5532 11.3908 15.272V11.7001C11.3908 11.4188 11.6158 11.1938 11.8971 11.1938H15.4689C15.7502 11.1938 15.9752 11.4188 15.9752 11.7001V15.272Z"
+                              fill=""
+                            ></path>
+                          </svg>
+                          Dashboard
+                        </NavLink>
+                      </li>
+                    </React.Fragment>
+                  );
+                }}
+              </SidebarLinkGroup>
+
+              <li>
+                <NavLink
+                  to="/adminDashbord/form-layout"
+                  className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-black duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes("profile") && "bg-graydark dark:bg-meta-4"
+                  }`}
+                >
+                  <svg
+                    class="fill-current"
+                    width="18"
+                    height="19"
+                    viewBox="0 0 18 19"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M16.8749 7.44902C16.5374 7.44902 16.228 7.73027 16.228 8.0959V13.3834C16.228 14.4803 15.4124 15.3521 14.3999 15.3521H3.5999C2.55928 15.3521 1.77178 14.4803 1.77178 13.3834V8.06777C1.77178 7.73027 1.49053 7.4209 1.1249 7.4209C0.759277 7.4209 0.478027 7.70215 0.478027 8.06777V13.3553C0.478027 15.1271 1.85615 16.5896 3.57178 16.5896H14.3999C16.1155 16.5896 17.4937 15.1553 17.4937 13.3553V8.06777C17.5218 7.73027 17.2124 7.44902 16.8749 7.44902Z"
+                      fill=""
+                    ></path>
+                    <path
+                      d="M8.5498 11.6396C8.6623 11.7521 8.83105 11.8365 8.9998 11.8365C9.16855 11.8365 9.30918 11.7803 9.4498 11.6396L12.8811 8.23652C13.1342 7.9834 13.1342 7.58965 12.8811 7.33652C12.6279 7.0834 12.2342 7.0834 11.9811 7.33652L9.64668 9.64277V2.16152C9.64668 1.82402 9.36543 1.51465 8.9998 1.51465C8.6623 1.51465 8.35293 1.7959 8.35293 2.16152V9.69902L6.01855 7.36465C5.76543 7.11152 5.37168 7.11152 5.11855 7.36465C4.86543 7.61777 4.86543 8.01152 5.11855 8.26465L8.5498 11.6396Z"
+                      fill=""
+                    ></path>
+                  </svg>
+                  Add User
+                </NavLink>
+              </li>
+
+             
+              
+
+
+
+
+             
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </aside>
+  );
+};
+
+export default Sidebar;

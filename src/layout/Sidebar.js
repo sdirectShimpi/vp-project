@@ -298,11 +298,21 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     <React.Fragment>
                       <NavLink
                         to="#"
-                        className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                          (pathname === '/forms' ||
-                            pathname.includes('forms')) &&
-                          'bg-graydark dark:bg-meta-4'
-                        }`}
+
+                        className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-black duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes("calendar") &&
+                    "bg-graydark dark:bg-meta-4"
+                  }`}
+
+
+
+
+
+                        // className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                        //   (pathname === '/forms' ||
+                        //     pathname.includes('forms')) &&
+                        //   'bg-graydark dark:bg-meta-4'
+                        // }`}
                         onClick={(e) => {
                           e.preventDefault();
                           sidebarExpanded
@@ -379,10 +389,18 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           <li>
                             <NavLink
                               to="/forms/form-layout"
-                              className={({ isActive }) =>
-                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
-                                (isActive && '!text-white')
-                              }
+
+
+
+                              
+                        className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-black duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                    pathname.includes("calendar") &&
+                    "bg-graydark dark:bg-meta-4"
+                  }`}
+                              // className={({ isActive }) =>
+                              //   'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                              //   (isActive && '!text-white')
+                              // }
                             >
                               Form Layout
                             </NavLink>

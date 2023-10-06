@@ -14,6 +14,8 @@ import PageNotFound from "./PageNotFound";
 import PrivateRouteUser from "./user/DashBord/PrivateRouter";
 import Tables from "./layout/Page/Table";
 import ToDOList from "./layout/Component/ToDOList";
+import UserLogin from "./user/Auth/UserLogin";
+
 
 export const router = createBrowserRouter([
   {
@@ -21,11 +23,7 @@ export const router = createBrowserRouter([
     element: <PrivateRoute />,
     exact: true,
     children: [
-      {
-        path: "form-layout",
-        element: <FormLayout />,
-        exact: true,
-      },
+     
 
       {
         path: "ecom",
@@ -79,12 +77,40 @@ export const router = createBrowserRouter([
         exact: true
       }
 
+],
+},
 
 
-    ],
-  },
 
 
+{
+  path: "/adminDashbord",
+  element: <PrivateRouteUser />,
+  exact: true,
+  children: [
+    {
+      path: "form-layout",
+      element: <FormLayout />,
+      exact: true,
+    },
+
+
+],
+},
+
+
+
+
+
+
+
+
+
+{
+  path: "/UserLogin",
+  element: <UserLogin />,
+  exact: true,
+},
 
   
   {
