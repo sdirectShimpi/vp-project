@@ -122,24 +122,70 @@ const Editor = () => {
 
 
 
+  // const handleApplyClick = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const response = await axios.post(`${baseUrl}/sendContent`, {
+  //       htmlContent: editorContent, 
+  //       applyDate,
+  //       leaveContent,
+  //     });
+  //     console.log("vcxvcx", response);
+  //     if (response.status === 200) {
+  //       setIsLoading(false);
+  //     }
+  //     console.log("response", response);
+  //     setEditorContent(""); 
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const handleApplyClick = async () => {
     try {
       setIsLoading(true);
+  
+      // Trim the editor content and check if it's empty or contains only whitespace
+      const trimmedContent = editorContent.trim();
+      if (!trimmedContent) {
+        alert("Please write some content in the editor.");
+        setIsLoading(false); // Set loading state to false
+        return; // Prevent further execution
+      }
+  
       const response = await axios.post(`${baseUrl}/sendContent`, {
-        htmlContent: editorContent, 
+        htmlContent: editorContent,
         applyDate,
         leaveContent,
       });
-      console.log("vcxvcx", response);
+  
       if (response.status === 200) {
         setIsLoading(false);
       }
-      console.log("response", response);
-      setEditorContent(""); 
+  
+      // Clear the editor content
+      setEditorContent("");
     } catch (err) {
       console.log(err);
     }
   };
+  
 
 
 

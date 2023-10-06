@@ -52,6 +52,12 @@ const url = process.env.REACT_APP_API_URL;
 console.log("response",response)
       if (authActions.login.fulfilled.match(response)) {
         // Login successful
+
+
+
+        // Correct way to set userInfo in localStorage
+
+
         localStorage.setItem('islogin', true);
         localStorage.setItem('token', response.payload.data.data.loginToken);
         localStorage.setItem("userInfo", JSON.stringify(response.payload.data.data.userRecords));

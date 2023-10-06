@@ -12,6 +12,8 @@ import Profile from "./layout/Page/Profile";
 import Settings from "./layout/Page/Settings";
 import PageNotFound from "./PageNotFound";
 import PrivateRouteUser from "./user/DashBord/PrivateRouter";
+import Tables from "./layout/Page/Table";
+import ToDOList from "./layout/Component/ToDOList";
 
 export const router = createBrowserRouter([
   {
@@ -64,7 +66,20 @@ export const router = createBrowserRouter([
         path :"inbox",
         element:<Inbox/>,
         exact: true
+      },
+
+      {
+        path :"table",
+        element:<Tables/>,
+        exact: true
+      },
+      {
+        path :"todolist",
+        element:<ToDOList/>,
+        exact: true
       }
+
+
 
     ],
   },
