@@ -7,10 +7,10 @@ import Sidebar from "../Sidebar";
 
 const PrivateRoute = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const islogin = localStorage.getItem("islogin");
-  if (!islogin) {
-    return <Navigate to="/login"/>;
-  }
+  // const islogin = localStorage.getItem("islogin");
+  // if (!islogin) {
+  //   return <Navigate to="/login"/>;
+  // }
 
   return (
     <div className="dark:bg-boxdark-2 dark:text-bodydark">

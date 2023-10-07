@@ -1,10 +1,14 @@
 import Breadcrumb from "./Breadcrumb";
 import { useState } from "react";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const FormLayout = () => {
   const baseUrl = process.env.REACT_APP_API_URL;
   const [createUser, setcreateUser] = useState({
+    name:"",
     email: "",
     password: "",
     userType: "",
@@ -19,6 +23,12 @@ const FormLayout = () => {
     try {
       e.preventDefault();
       const response = await axios.post(`${baseUrl}/createUser`, createUser);
+      toast.success(" user add successful!");
+      setcreateUser({
+        email: "",
+        password: "",
+        userType: "",
+      })
 
       console.log("res data", response);
     } catch (error) {}
@@ -27,6 +37,19 @@ const FormLayout = () => {
   return (
     <>
       <Breadcrumb pageName="Add User" />
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
 
       <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
         <div className="flex flex-col gap-9">
@@ -40,6 +63,26 @@ const FormLayout = () => {
             <form action="#">
               <div className="p-6.5">
                 <div className="mb-4.5 flex flex-col gap-6 xl:flex-row"></div>
+
+
+
+
+
+
+                <div className="mb-4.5">
+                  <label className="mb-2.5 block text-black dark:text-white">
+                    Name <span className="text-meta-1">*</span>
+                  </label>
+                  <input
+                    type="email"
+                    onChange={handlecrateUser}
+                    name ="name"
+                    value={createUser.name}
+                    placeholder="Enter your Name"
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  />
+                </div>
+
 
                 <div className="mb-4.5">
                   <label className="mb-2.5 block text-black dark:text-white">
@@ -106,6 +149,12 @@ const FormLayout = () => {
                   </div>
                 </div>
 
+
+
+
+
+                
+
                 <button
                   className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray"
                   onClick={addUser}
@@ -122,3 +171,4 @@ const FormLayout = () => {
 };
 
 export default FormLayout;
+

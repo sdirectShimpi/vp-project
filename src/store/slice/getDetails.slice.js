@@ -49,6 +49,9 @@ const getRecord = () => {
         `${name}/getUser`,
         async ({userId}) => {
             const response = await axios.get(`${baseUrl}/getUser/${userId}` )
+
+
+            console.log("getUser",response)
             
             const data = response.data.data
             return response

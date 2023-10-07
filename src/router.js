@@ -12,6 +12,11 @@ import Profile from "./layout/Page/Profile";
 import Settings from "./layout/Page/Settings";
 import PageNotFound from "./PageNotFound";
 import PrivateRouteUser from "./user/DashBord/PrivateRouter";
+import Tables from "./layout/Page/Table";
+import ToDOList from "./layout/Component/ToDOList";
+import UserLogin from "./user/Auth/UserLogin";
+import AddProject from "./user/layout/AddProject";
+
 
 export const userAuth = JSON.parse(localStorage.getItem("userInfo"));
 
@@ -23,11 +28,7 @@ export const router = createBrowserRouter([
     element: <PrivateRoute />,
     exact: true,
     children: [
-      {
-        path: "form-layout",
-        element: <FormLayout />,
-        exact: true,
-      },
+     
 
       {
         path: "ecom",
@@ -51,11 +52,7 @@ export const router = createBrowserRouter([
         element: <Calendar />,
         exact: true,
       },
-      {
-        path :"form",
-        element:<FormLayout/>,
-        exact: true
-      },
+     
 
 
       {
@@ -68,12 +65,60 @@ export const router = createBrowserRouter([
         path :"inbox",
         element:<Inbox/>,
         exact: true
-      }
+      },
 
-    ],
-  },
+      {
+        path :"table",
+        element:<Tables/>,
+        exact: true
+      },
+      {
+        path :"todolist",
+        element:<ToDOList/>,
+        exact: true
+      },
+     
+
+],
+},
 
 
+
+
+{
+  path: "/adminDashbord",
+  element: <PrivateRouteUser />,
+  exact: true,
+  children: [
+    {
+      path: "form-layout",
+      element: <FormLayout />,
+      exact: true,
+    },
+
+    {
+      path:"addProduct",
+      element:<AddProject/>,
+      exact: true
+
+    }
+
+],
+},
+
+
+
+
+
+
+
+
+
+{
+  path: "/UserLogin",
+  element: <UserLogin />,
+  exact: true,
+},
 
   
   {
