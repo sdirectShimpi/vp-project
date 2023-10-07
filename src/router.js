@@ -13,6 +13,10 @@ import Settings from "./layout/Page/Settings";
 import PageNotFound from "./PageNotFound";
 import PrivateRouteUser from "./user/DashBord/PrivateRouter";
 
+export const userAuth = JSON.parse(localStorage.getItem("userInfo"));
+
+
+
 export const router = createBrowserRouter([
   {
     path: "/admin",

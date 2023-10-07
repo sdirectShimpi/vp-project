@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 interface BreadcrumbProps {
   pageName: string;
 }
@@ -12,7 +13,8 @@ const Breadcrumb = ({ pageName }: BreadcrumbProps) => {
       <nav>
         <ol className="flex items-center gap-2">
           <li>
-            <Link to="/">Dashboard /</Link>
+            {/* <NavLink to ="/admin/ecom">Dashboard /</NavLink> */}
+            <Link to="/admin/ecom">Dashboard /</Link>
           </li>
           <li className="text-primary">{pageName}</li>
         </ol>
