@@ -80,7 +80,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                     <React.Fragment>
                       <li>
                         <NavLink
-                          to="/admin/ecom"
+                          to="/UserDashbord/dashbord"
                           className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-black duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                             pathname.includes("profile") &&
                             "bg-graydark dark:bg-meta-4"
@@ -121,7 +121,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
               <li>
                 <NavLink
-                  to="/admin/inbox"
+                  to="/UserDashbord/inbox"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-black duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes("profile") && "bg-graydark dark:bg-meta-4"
                   }`}
@@ -149,7 +149,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
               <li>
                 <NavLink
-                  to="/admin/Calendar"
+                  to="/UserDashbord/Calendar"
                   className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-black duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                     pathname.includes("calendar") &&
                     "bg-graydark dark:bg-meta-4"
@@ -174,7 +174,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
               <li>
                 <SidebarLinkGroup
                   activeCondition={
-                    pathname === "/admin/assignments" ||
+                    pathname === "/UserDashbord/assignments" ||
                     pathname.includes("dashboard")
                   }
                 >
@@ -247,7 +247,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                           <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
                             <li>
                               <NavLink
-                                to="/admin/table"
+                                to="/UserDashbord/table"
                                 className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-black duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                                   pathname.includes("myprojects") &&
                                   "bg-graydark dark:bg-meta-4"
@@ -257,7 +257,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                               </NavLink>
                             </li>
                             <li>
-                              <NavLink
+                              {/* <NavLink
                                 to="/projectReviews"
                                 className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-black duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                                   pathname.includes("projectReviews") &&
@@ -265,7 +265,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                                 }`}
                               >
                                 Project Review
-                              </NavLink>
+                              </NavLink> */}
                             </li>
                           </ul>
                         </div>
@@ -370,17 +370,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                         <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
                           <li>
                             <NavLink
-                              to="/admin/todolist"
-                              className={({ isActive }) =>
-                                "group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white " +
-                                (isActive && "!text-white")
-                              }
+                              to="/UserDashbord/todolist"
+                              c className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-black duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
+                                pathname.includes("calendar") &&
+                                "bg-graydark dark:bg-meta-4"
+                              }`}
                             >
                               Form Elements
                             </NavLink>
                           </li>
                           <li>
-                            <NavLink
+                            {/* <NavLink
                               to="/forms/form-layout"
                               className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-black duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
                                 pathname.includes("calendar") &&
@@ -392,7 +392,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                               // }
                             >
                               Form Layout
-                            </NavLink>
+                            </NavLink> */}
                           </li>
                         </ul>
                       </div>

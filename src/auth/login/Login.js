@@ -61,7 +61,7 @@ console.log("response",response)
         localStorage.setItem('islogin', true);
         localStorage.setItem('token', response.payload.data.data.loginToken);
         localStorage.setItem("userInfo", JSON.stringify(response.payload.data.data.userRecords));
-        navigate('/admin');
+        navigate('/UserDashbord');
   
         
         toast.success("Login successful!");

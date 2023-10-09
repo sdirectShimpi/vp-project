@@ -16,22 +16,23 @@ import Tables from "./layout/Page/Table";
 import ToDOList from "./layout/Component/ToDOList";
 import UserLogin from "./user/Auth/UserLogin";
 import AddProject from "./user/layout/AddProject";
+import ShowAllProject from "./user/layout/ShowAllProject";
 
 
-export const userAuth = JSON.parse(localStorage.getItem("userInfo"));
+//export const userAuth = JSON.parse(localStorage.getItem("userInfo"));
 
 
 
 export const router = createBrowserRouter([
   {
-    path: "/admin",
+    path: "/UserDashbord",
     element: <PrivateRoute />,
     exact: true,
     children: [
      
 
       {
-        path: "ecom",
+        path: "dashbord",
         element: <ECommerce />,
         exact: true,
       },
@@ -97,8 +98,15 @@ export const router = createBrowserRouter([
     },
 
     {
-      path:"addProduct",
+      path:"addProject",
       element:<AddProject/>,
+      exact: true
+
+
+    },
+    {
+      path:"showProject",
+      element:<ShowAllProject/>,
       exact: true
 
     }
@@ -115,7 +123,7 @@ export const router = createBrowserRouter([
 
 
 {
-  path: "/UserLogin",
+  path: "/AdminLogin",
   element: <UserLogin />,
   exact: true,
 },

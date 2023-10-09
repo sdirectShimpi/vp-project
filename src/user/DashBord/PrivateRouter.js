@@ -6,21 +6,23 @@ import { Navigate, Outlet } from "react-router-dom";
  import Sidebar from "../layout/Siderbar";
 
 const PrivateRouteUser = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-
-  // let userInfo = localStorage.getItem('userInfo'); 
+   let userInfo = localStorage.getItem('userInfo'); 
+   
+   console.log("userInfo",userInfo)
   // let user = localStorage.getItem("userInfo");
   // user = JSON.parse(user)
-  // userInfo = JSON.parse(userInfo);
+   userInfo = (userInfo);
   
   // console.log("user role", user)
 
-  // if (userInfo?.!== 2) { 
-  //   return <Navigate to="/User-Login" />
-  // }
+   if (userInfo[0]?.userType === 5) { 
+     return <Navigate to="/UserLogin" />
+   }
 
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   
 
   return (

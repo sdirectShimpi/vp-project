@@ -22,12 +22,19 @@ const FormLayout = () => {
   const addUser = async (e) => {
     try {
       e.preventDefault();
-      const response = await axios.post(`${baseUrl}/createUser`, createUser);
+      const response = await axios.post(`${baseUrl}/creatUser`, createUser);
+   
+      
       toast.success(" user add successful!");
       setcreateUser({
+        name:"",
         email: "",
         password: "",
         userType: "",
+        totalProject:"",
+     
+totalExprince:"",
+activeProject:""
       })
 
       console.log("res data", response);
@@ -51,7 +58,7 @@ const FormLayout = () => {
         theme="light"
       />
 
-      <div className="grid grid-cols-1 gap-9 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-9 sm:grid-cols-1.7">
         <div className="flex flex-col gap-9">
           {/* <!-- Contact Form --> */}
           <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -107,10 +114,58 @@ const FormLayout = () => {
                     name ="password"
                     onChange={handlecrateUser}
                     value={createUser.password}
-                    placeholder=""
+                    placeholder="Enter your Password "
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   />
                 </div>
+
+
+                <div className="mb-4.5">
+                  <label className="mb-2.5 block text-black dark:text-white">
+                  Active Project
+                  </label>
+                  <input
+                    type="text"
+                    name ="activeProject"
+                    onChange={handlecrateUser}
+                    value={createUser.activeProject}
+                    placeholder="Enter your ActiveProject "
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  />
+                </div>
+                <div className="mb-4.5">
+                  <label className="mb-2.5 block text-black dark:text-white">
+                  Total Exprince
+                  </label>
+                  <input
+                    type="text"
+                    name ="totalExprince"
+                    onChange={handlecrateUser}
+                    value={createUser.totalExprince}
+                    placeholder="Enter your TotalExprince "
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  />
+                </div>
+                <div className="mb-4.5">
+                  <label className="mb-2.5 block text-black dark:text-white">
+                  Total Project
+                  </label>
+                  <input
+                    type="text"
+                    name ="totalProject"
+                    onChange={handlecrateUser}
+                    value={createUser.totalProject}
+                    placeholder="Enter your TotalProject "
+                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                  />
+                </div>
+
+
+
+
+
+
+
 
                 <div className="mb-4.5">
                   <label className="mb-2.5 block text-black dark:text-white">
@@ -125,7 +180,7 @@ const FormLayout = () => {
                       <option value="2">Operater</option>
                       <option value="3">PO</option>
                       <option value="4">SM</option>
-                      <option value="5">employee</option>
+                      <option value="5">Employee</option>
                     </select>
                     <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
                       <svg

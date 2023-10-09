@@ -3,49 +3,6 @@
 
 
 
-// import React, { useState } from 'react';
-
-// const Inbox = () => {
-//   const [selected, setSelected] = useState(false);
-//   const [page, setPage] = useState('inbox');
-
-//   const handleClick = () => {
-//     setSelected(selected === 'Inbox' ? '' : 'Inbox');
-//   };
-
-//   return (
-//     <li>
-//       <a
-//         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-//           selected === 'Inbox' && page === 'inbox' ? 'bg-graydark dark:bg-meta-4' : ''
-//         }`}
-//         href="inbox.html"
-//         onClick={handleClick}
-//       >
-//         <svg
-//           className="fill-current"
-//           width="18"
-//           height="19"
-//           viewBox="0 0 18 19"
-//           xmlns="http://www.w3.org/2000/svg"
-//         >
-//           {/* Your SVG path elements */}
-//         </svg>
-
-//         Inbox
-//         <span className="absolute right-4 block rounded bg-primary py-1 px-2 text-xs font-medium text-white">
-//           Pro
-//         </span>
-//       </a>
-//     </li>
-//   );
-// };
-
-// export default Inbox;
-
-
-
-
 
 
 

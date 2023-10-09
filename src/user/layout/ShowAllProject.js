@@ -1,8 +1,9 @@
 
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const TableOne = () => {
+const ShowAllProject = () => {
   const baseUrl = process.env.REACT_APP_API_URL;
 
   const [data, setData] = useState([]);
@@ -16,22 +17,12 @@ const TableOne = () => {
 
   const getProduct = async () => {
     try {
-    
-      const userInfo = JSON.parse(localStorage.getItem("userInfo")); 
-      console.log("hjhkh",userInfo[0]._id);
-     
-
-  
-   
-      if (userInfo && userInfo._id) {
-        const response = await axios.get(
-          `${baseUrl}/getProjectData/${userInfo[0]._id}`
+    const response = await axios.get(
+          `${baseUrl}/getProjectData`
           
         );
         setData(response.data.data);
-      } else {
-        console.log("User info is missing _id property.");
-      }
+    
     } catch (err) {
       console.log(err);
     }
@@ -120,4 +111,4 @@ const TableOne = () => {
   );
 };
 
-export default TableOne;
+export default ShowAllProject;

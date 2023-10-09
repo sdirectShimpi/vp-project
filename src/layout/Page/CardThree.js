@@ -13,15 +13,14 @@ const CardThree = () => {
     try {
       const userinfo = JSON.parse(localStorage.getItem("userInfo"));
     const userId = userinfo[0]._id;
-      const response = await axios.get(`${baseUrl}/getPorjectRecord/${userId}`);
-      console.log("gkhjkioplikp",response.data.data.data[0].activeProject)
-      setActiveProject(response.data.data.data[0].activeProject);
+      const response = await axios.get(`${baseUrl}/getUser/${userId}`);
+     
+      setActiveProject(response.data.data.activeProject);
 
     } catch (err) {
       console.log(err);
     }
   };
-  console.log("totalProject", activeProject)
 
   useEffect(() => {
     getProject()

@@ -10,15 +10,15 @@ const CardOne = () => {
     try {
       const userinfo = JSON.parse(localStorage.getItem("userInfo"));
     const userId = userinfo[0]._id;
-      const response = await axios.get(`${baseUrl}/getPorjectRecord/${userId}`);
-      console.log("cardOne",response)
-       seTotalProject(response.data.data.data[0].totalProject);
+      const response = await axios.get(`${baseUrl}/getUser/${userId}`);
+      
+       seTotalProject(response.data.data.totalProject);
 
     } catch (err) {
       console.log(err);
     }
   };
-  console.log("totalProject", totalProject)
+
 
   useEffect(() => {
     getProject()

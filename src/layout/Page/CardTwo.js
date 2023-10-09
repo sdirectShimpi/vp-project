@@ -14,15 +14,15 @@ const CardTwo = () => {
     try {
       const userinfo = JSON.parse(localStorage.getItem("userInfo"));
     const userId = userinfo[0]._id;
-      const response = await axios.get(`${baseUrl}/getPorjectRecord/${userId}`);
+      const response = await axios.get(`${baseUrl}/getUser/${userId}`);
       //console.log("await",response.data.data.productRecords[0].projectDetails.totalProject)
-      setTotalExprince(response.data.data.data[0].totalExprince);
+      setTotalExprince(response.data.data.totalExprince);
 
     } catch (err) {
       console.log(err);
     }
   };
-  console.log("totalProject", totalExprince)
+ 
 
   useEffect(() => {
     getProject()
