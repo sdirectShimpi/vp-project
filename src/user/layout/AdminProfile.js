@@ -49,7 +49,7 @@ const AdminProfile = () => {
 
   const handleLogout =() =>{
     localStorage.clear()
-    navigate('/UserLogin')
+    navigate('/AdminLogin')
 
   }
 

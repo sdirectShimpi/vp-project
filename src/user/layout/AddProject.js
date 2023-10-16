@@ -1,13 +1,13 @@
-
 import { useState, useEffect } from "react";
 import axios from "axios";
-import Breadcrumb from "../../layout/Breadcrumb"
+import Breadcrumb from "../../layout/Breadcrumb";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const AddProject = () => {
   const baseUrl = process.env.REACT_APP_API_URL;
-  const [createUser, setcreateUser] = useState({
+  const projectPlan = process.env.REACT_APP_IMAGE_URL;
+  const [createProject, setcreateProject] = useState({
     projectName: "",
     branch: "",
     clientName: "",
@@ -22,49 +22,88 @@ const AddProject = () => {
     tech: "",
     startDate: "",
     endDate: "",
+    team: [],
+    projectDocument: null,
   });
+  const [selectedTeamMembers, setSelectedTeamMembers] = useState([]);
+  const [file, setFile] = useState([]);
 
-  const handlecrateUser = (e) => {
-    setcreateUser({ ...createUser, [e.target.name]: e.target.value });
+  const handleprojectDocument = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
   };
 
-  const addProject = async (e) => {
-    try {
-      e.preventDefault();
-      const response = await axios.post(`${baseUrl}/crateProduct`, createUser);
-      toast.success(" Project Add successful!");
+  const handleCreateUser = (e) => {
+    setcreateProject({ ...createProject, [e.target.name]: e.target.value });
+  };
+  const handleTeamMemberSelection = (e) => {
+    const selectedMemberId = e.target.value;
+    const selectedMember = data.find((item) => item._id === selectedMemberId);
 
-      console.log("res data", response);
+    if (selectedMember) {
+      const selectedMemberInfo = {
+        _id: selectedMember._id,
+        name: selectedMember.name,
+      };
 
-      setcreateUser({
-        projectName: "",
-        branch: "",
-        clientName: "",
-        clientAddress: "",
-        clientEmail: "",
-        clientPhone: "",
-        bdgMember: "",
-        seniorManager: "",
-        manager: "",
-        po: "",
-        scrumMaster: "",
-        tech: "",
-        startDate: "",
-        endDate: "",
-      });
-    } catch (error) { }
+      setSelectedTeamMembers([...selectedTeamMembers, selectedMemberInfo]);
+    }
   };
 
+  const removeSelectedTeamMember = (memberId) => {
+    const updatedMembers = selectedTeamMembers.filter(
+      (member) => member._id !== memberId
+    );
+    setSelectedTeamMembers(updatedMembers);
+  };
 
+  // const addProject = async (e) => {
+  //   try {
+  //     e.preventDefault();
+  //     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  //     const userId = userInfo[0]._id;
 
+  //     const team = selectedTeamMembers.map((item) => {
+  //       return item._id;
+  //     });
+  //     createProject.team = team;
+  //     console.log("createProject", createProject);
+
+  //     const response = await axios.post(
+  //       `${baseUrl}/crateProduct`,
+  //       createProject
+  //     );
+  //     toast.success("Project Add successful!");
+
+  //     console.log("res data", response);
+
+  //     setcreateProject({
+  //       projectName: "",
+  //       branch: "",
+  //       clientName: "",
+  //       clientAddress: "",
+  //       clientEmail: "",
+  //       clientPhone: "",
+  //       bdgMember: "",
+  //       seniorManager: "",
+  //       manager: "",
+  //       po: "",
+  //       scrumMaster: "",
+  //       tech: "",
+  //       startDate: "",
+  //       endDate: "",
+  //       team: [],
+  //     });
+  //   } catch (error) {}
+  // };
 
   const [data, setData] = useState([]);
   const [taskSelected, setTaskSelected] = useState({}); // Keep track of selected tasks
 
-  const getProduct = async () => {
+  const getProject = async () => {
     try {
       const response = await axios.get(`${baseUrl}/getType`);
-      console.log("datafgghfhghyg", response.data);
+
       setData(response.data.data);
     } catch (err) {
       console.log(err);
@@ -72,79 +111,107 @@ const AddProject = () => {
   };
 
   useEffect(() => {
-    getProduct();
+    getProject();
   }, []);
 
-  const handleCheckboxChange = (id) => {
-    setTaskSelected((prevSelected) => ({
-      ...prevSelected,
-      [id]: !prevSelected[id], // Toggle the selected state for this task
-    }));
-  };
+  const uplodeProjectDoc = async (e) => {
+    e.preventDefault();
+    const userinfo = JSON.parse(localStorage.getItem("userInfo"));
+    const userId = userinfo[0]._id;
 
+    const team = selectedTeamMembers.map((item) => {
+      return item._id;
+    });
+    createProject.team = team;
+    console.log("create project", createProject);
+    const formData = new FormData();
+    formData.append("projectName", createProject.projectName);
+    formData.append("branch", createProject.branch);
+    formData.append("clientName", createProject.clientName);
+    formData.append("clientAddress", createProject.clientAddress);
+    formData.append("clientEmail", createProject.clientEmail);
+    formData.append("clientPhone", createProject.clientPhone);
+    formData.append("bdgMember", createProject.bdgMember);
+    formData.append("seniorManager", createProject.seniorManager);
+    formData.append("manager", createProject.manager);
+    formData.append("po", createProject.po);
+    formData.append("scrumMaster", createProject.scrumMaster);
+    formData.append("tech", createProject.tech);
+    formData.append("team", JSON.stringify(team));
+    // formData.append("team", team); // Join array elements into a comma-separated string
+
+    //formData.append("team", JSON.stringify([]));
+    formData.append("startDate", createProject.startDate);
+    formData.append("endDate", createProject.endDate);
+
+    if (file) {
+      formData.append("projectDocument", file);
+    }
+
+    console.log("FormData Content: ", formData);
+
+    const response = await axios.post(`${baseUrl}/crateProduct`, formData);
+    toast.success("Project Add successful!");
+    console.log("response", response);
+  };
 
   return (
     <>
       <Breadcrumb pageName="Add Project" />
 
       <div className="grid grid-cols-4 gap-9 sm:grid-cols-1">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
 
         <div className="flex flex-col gap-9">
           {/* <!-- Contact Form --> */}
           <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
               <h3 className="font-medium text-black dark:text-white">
-                Contact Form
+                Add Project
               </h3>
             </div>
             <form action="#">
               <div className="p-6.5">
-           
-             <div className="flex mb-4.5">
+                <div className="flex mb-4.5">
                   <div className="w-1/2">
                     <label className="mb-2.5 block text-black dark:text-white">
-                    Project Name
+                      Project Name
                     </label>
                     <input
                       type="text"
-                      onChange={handlecrateUser}
+                      onChange={handleCreateUser}
                       name="projectName"
-                      value={createUser.projectName}
+                      value={createProject.projectName}
                       placeholder="New Project Name"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
                   <div className="w-1/2 pl-4">
                     <label className="mb-2.5 block text-black dark:text-white">
-                     Branch
+                      Branch
                     </label>
                     <input
                       type="text"
                       name="branch"
-                      onChange={handlecrateUser}
-                      value={createUser.branch}
+                      onChange={handleCreateUser}
+                      value={createProject.branch}
                       placeholder="Enter Branch Name"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
                 </div>
-
-
-
-
-                 <div className="flex mb-4.5">
+                <div className="flex mb-4.5">
                   <div className="w-1/2">
                     <label className="mb-2.5 block text-black dark:text-white">
                       Client Name
@@ -152,8 +219,8 @@ const AddProject = () => {
                     <input
                       type="text"
                       name="clientName"
-                      onChange={handlecrateUser}
-                      value={createUser.clientName}
+                      onChange={handleCreateUser}
+                      value={createProject.clientName}
                       placeholder="Enter Client Name"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
@@ -165,46 +232,13 @@ const AddProject = () => {
                     <input
                       type="text"
                       name="clientAddress"
-                      onChange={handlecrateUser}
-                      value={createUser.clientAddress}
+                      onChange={handleCreateUser}
+                      value={createProject.clientAddress}
                       placeholder="Enter Client Address"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
                 </div>
-
-
-
-
-                <div className="mb-4.5 flex">
-                  <div className="w-1/2 pr-4">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      BDG Member
-                    </label>
-                    <input
-                      type="text"
-                      name="bdgMember"
-                      onChange={handlecrateUser}
-                      value={createUser.bdgMember}
-                      placeholder="Enter BDG Member"
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-                  <div className="w-1/2">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Senior Manager
-                    </label>
-                    <input
-                      type="text"
-                      name="seniorManager"
-                      onChange={handlecrateUser}
-                      value={createUser.seniorManager}
-                      placeholder="Enter Senior Manager"
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-                </div>
-
 
                 <div className="flex mb-4.5">
                   <div className="w-1/2 pr-4">
@@ -214,8 +248,8 @@ const AddProject = () => {
                     <input
                       type="text"
                       name="manager"
-                      onChange={handlecrateUser}
-                      value={createUser.manager}
+                      onChange={handleCreateUser}
+                      value={createProject.manager}
                       placeholder="Enter Manager"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
@@ -227,19 +261,13 @@ const AddProject = () => {
                     <input
                       type="text"
                       name="tech"
-                      onChange={handlecrateUser}
-                      value={createUser.tech}
+                      onChange={handleCreateUser}
+                      value={createProject.tech}
                       placeholder="Enter"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
                 </div>
-
-
-
-
-
-
                 <div className="mb-4.5 flex">
                   <div className="w-1/2 pr-4">
                     <label className="mb-2.5 block text-black dark:text-white">
@@ -248,16 +276,18 @@ const AddProject = () => {
                     <div className="relative z-20 bg-transparent dark:bg-form-input">
                       <select
                         className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                        name="userType"
-                        onChange={getProduct}
+                        name="po"
+                        value={createProject.po}
+                        onChange={handleCreateUser}
                       >
-                        <option value="">Type of User</option>
+                        <option value="">Select PO</option>
                         {data.map((item) => (
-                          <option key={item.email} value={item.email}>
+                          <option key={item._id} value={item._id}>
                             {item.name}
                           </option>
                         ))}
                       </select>
+
                       <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
                         <svg
                           className="fill-current"
@@ -286,16 +316,18 @@ const AddProject = () => {
                     <div className="relative z-20 bg-transparent dark:bg-form-input">
                       <select
                         className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                        name="userType"
-                        onChange={getProduct}
+                        name="scrumMaster"
+                        value={createProject.scrumMaster}
+                        onChange={handleCreateUser}
                       >
-                        <option value="">Type of User</option>
+                        <option value="">Select SM</option>
                         {data.map((item) => (
-                          <option key={item.email} value={item.email}>
+                          <option key={item._id} value={item._id}>
                             {item.name}
                           </option>
                         ))}
                       </select>
+
                       <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
                         <svg
                           className="fill-current"
@@ -318,8 +350,6 @@ const AddProject = () => {
                     </div>
                   </div>
                 </div>
-
-
                 <div className="flex mb-4.5">
                   <div className="w-1/2 pr-4">
                     <label className="mb-2.5 block text-black dark:text-white">
@@ -328,8 +358,8 @@ const AddProject = () => {
                     <input
                       type="text"
                       name="clientEmail"
-                      onChange={handlecrateUser}
-                      value={createUser.clientEmail}
+                      onChange={handleCreateUser}
+                      value={createProject.clientEmail}
                       placeholder="Enter Client Email"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
@@ -341,133 +371,158 @@ const AddProject = () => {
                     <input
                       type="text"
                       name="clientPhone"
-                      onChange={handlecrateUser}
-                      value={createUser.clientPhone}
+                      onChange={handleCreateUser}
+                      value={createProject.clientPhone}
                       placeholder="Enter Client Phone Number"
                       className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
                 </div>
 
-
-
-                <div className="mb-4.5 flex">
-
-                  <div className="mb-4.5 flex">
+                <div className="flex mb-4.5">
+                  <div className="w-1/2 pr-4">
                     <label className="mb-2.5 block text-black dark:text-white w-1/3 label-break">
                       Start Date <span className="text-meta-1">*</span>
                     </label>
                     <input
                       type="date"
-                      onChange={handlecrateUser}
+                      onChange={handleCreateUser}
                       name="startDate"
-                      value={createUser.startDate}
+                      value={createProject.startDate}
                       className="w-2/3 rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                     />
                   </div>
-
-
-
-
-
-
-
-                  <div className="mb-4.5 flex" style={{ marginLeft: "10%" }}>
+                  <div className="w-1/2">
                     <label className="mb-2.5 block text-black dark:text-white w-1/3">
                       End Date <span className="text-meta-1">*</span>
                     </label>
-
                     <input
                       type="date"
-                      onChange={handlecrateUser}
+                      onChange={handleCreateUser}
                       name="endDate"
-                      value={createUser.endDate}
+                      value={createProject.endDate}
                       className="w-2/3 ml-2 rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark.bg-form-input dark:focus:border-primary"
                     />
                   </div>
-
                 </div>
 
+                <div className="relative z-20 bg-transparent dark:bg-form-input">
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                    Select Team Members
+                  </label>
 
-
-
-
-                {/* <div>
-                  <h5 className="mb-4 text-lg font-medium text-black dark:text-white">
-                    Add User
-                  </h5>
-                  <div className="flex flex-col gap-2">
-                    {data.map((task) => (
-                      <label key={task.id} htmlFor={`taskCheckbox${task.id}`} className="cursor-pointer">
-                        <div className="relative flex items-center pt-0.5">
-                          <input
-                            type="checkbox"
-                            id={`taskCheckbox${task.id}`}
-                            className="taskCheckbox sr-only"
-                            checked={taskSelected[task.id] || false}
-                            onChange={() => handleCheckboxChange(task.id)}
-                          />
-                          <div className="box mr-3 flex h-5 w-5 items-center justify-center rounded border border-stroke dark:border-strokedark dark:bg-boxdark-2">
-                            <span
-                              className={`text-white ${taskSelected[task.id] ? "opacity-100" : "opacity-0"
-                                }`}
-                            >
-                              <svg
-                                className="fill-current"
-                                width="10"
-                                height="7"
-                                viewBox="0 0 10 7"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  fillRule="evenodd"
-                                  clipRule="evenodd"
-                                  d="M9.70685 0.292804C9.89455 0.480344 10 0.734667 10 0.999847C10 1.26503 9.89455 1.51935 9.70685 1.70689L4.70059 6.7072C4.51283 6.89468 4.2582 7 3.9927 7C3.72721 7 3.47258 6.89468 3.28482 6.7072L0.281063 3.70701C0.0986771 3.5184 -0.00224342 3.26578 3.785e-05 3.00357C0.00231912 2.74136 0.10762 2.49053 0.29326 2.30511C0.4789 2.11969 0.730026 2.01451 0.992551 2.01224C1.25508 2.00996 1.50799 2.11076 1.69683 2.29293L3.9927 4.58607L8.29108 0.292804C8.47884 0.105322 8.73347 0 8.99896 0C9.26446 0 9.51908 0.105322 9.70685 0.292804Z"
-                                  fill=""
-                                ></path>
-                              </svg>
-                            </span>
-                          </div>
-                          <p>{task.name}</p>
-                        </div>
-                      </label>
+                  <select
+                    className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    name="team"
+                    onChange={handleTeamMemberSelection}
+                  >
+                    <option value="">Select Team Member</option>
+                    {data.map((item) => (
+                      <option key={item._id} value={item._id}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                    Selected Team Members
+                  </label>
+                  <div className="flex flex-wrap items-center">
+                    {selectedTeamMembers.map((member) => (
+                      <span
+                        key={member._id}
+                        value={createProject.team}
+                        onChange={handleCreateUser}
+                        className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30"
+                      >
+                        {member.name}
+                        <span
+                          className="cursor-pointer pl-2 hover:text-danger"
+                          onClick={() => removeSelectedTeamMember(member._id)}
+                        >
+                          <svg
+                            width="12"
+                            height="12"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              clipRule="evenodd"
+                              d="M9.35355 3.35355C9.54882 3.15829 9.54882 2.84171 9.35355 2.64645C9.15829 2.45118 8.84171 2.45118 8.64645 2.64645L6 5.29289L3.35355 2.64645C3.15829 2.45118 2.84171 2.45118 2.64645 2.64645C2.45118 2.84171 2.45118 3.15829 2.64645 3.35355L5.29289 6L2.64645 8.64645C2.45118 8.84171 2.45118 9.15829 2.64645 9.35355C2.84171 9.54882 3.15829 9.54882 3.35355 9.35355L6 6.70711L8.64645 9.35355C8.84171 9.54882 9.15829 9.54882 9.35355 9.35355C9.54882 9.15829 9.54882 8.84171 9.35355 8.64645L6.70711 6L9.35355 3.35355Z"
+                              fill="currentColor"
+                            ></path>
+                          </svg>
+                        </span>
+                      </span>
                     ))}
                   </div>
-                </div> */}
-
-
-
+                </div>
 
                 <div class="mb-5">
-                            <label for="taskDescription" class="mb-2.5 block font-medium text-black dark:text-white">Task description</label>
-                            <textarea  name="description"
-                    onChange={handlecrateUser}
-                    value={createUser.description}
-                     id="taskDescription" cols="30" rows="7" placeholder="Enter task description" class="w-full rounded-sm border border-stroke bg-white py-3 px-4.5 focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-boxdark dark:focus:border-primary"></textarea>
-                        </div>
-
-
-{/* 
-                <div className="mb-4.5">
-                  <label className="mb-2.5 block text-black dark:text-white">
-                    Description
+                  <label
+                    for="taskDescription"
+                    class="mb-2.5 block font-medium text-black dark:text-white"
+                  >
+                    Task description
                   </label>
-                  <input
-                    type="text"
+                  <textarea
                     name="description"
-                    onChange={handlecrateUser}
-                    value={createUser.description}
-                    placeholder="Write.."
-                    className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                  />
-                </div> */}
-
-
-
+                    onChange={handleCreateUser}
+                    value={createProject.description}
+                    id="taskDescription"
+                    cols="30"
+                    rows="7"
+                    placeholder="Enter task description"
+                    class="w-full rounded-sm border border-stroke bg-white py-3 px-4.5 focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-boxdark dark:focus:border-primary"
+                  ></textarea>
+                </div>
+                <div className="mb-4.5 flex">
+                  <div className="w-1/2 pr-4">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      BDG Member
+                    </label>
+                    <input
+                      type="text"
+                      name="bdgMember"
+                      onChange={handleCreateUser}
+                      value={createProject.bdgMember}
+                      placeholder="Enter BDG Member"
+                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <label className="mb-2.5 block text-black dark:text-white">
+                      Senior Manager
+                    </label>
+                    <input
+                      type="text"
+                      name="seniorManager"
+                      onChange={handleCreateUser}
+                      value={createProject.seniorManager}
+                      placeholder="Enter Senior Manager"
+                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    />
+                  </div>
+                </div>
+                <div class="flex flex-col gap-5.5 p-6.5">
+                  <div>
+                    <label class="mb-3 block text-sm font-medium text-black dark:text-white">
+                      Attach file
+                    </label>
+                    <input
+                      type="file"
+                      class="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
+                      name="projectDocument"
+                      onChange={handleprojectDocument}
+                    />
+                  </div>
+                </div>
                 <button
                   className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray"
-                  onClick={addProject}
+                  onClick={uplodeProjectDoc}
                 >
                   Add Projects
                 </button>

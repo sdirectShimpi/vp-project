@@ -17,6 +17,8 @@ import ToDOList from "./layout/Component/ToDOList";
 import UserLogin from "./user/Auth/UserLogin";
 import AddProject from "./user/layout/AddProject";
 import ShowAllProject from "./user/layout/ShowAllProject";
+import ChatApp from "./layout/Component/ChatApp";
+import JoinRoom from "./layout/Component/JoinRoom";
 
 
 //export const userAuth = JSON.parse(localStorage.getItem("userInfo"));
@@ -110,6 +112,8 @@ export const router = createBrowserRouter([
       exact: true
 
     }
+    
+
 
 ],
 },
@@ -139,7 +143,18 @@ export const router = createBrowserRouter([
     element: <ForgotPassword />,
     exact: true,
   },
+  // {
+  //   path:"chat",
+  //   element:<ChatApp/>,
+  //   exact: true
 
+  // },
+  // {
+  //   path:"join",
+  //   element:<JoinRoom/>,
+  //   exact: true
+
+  // },
   {
     path: "*",
     element: <PageNotFound />,

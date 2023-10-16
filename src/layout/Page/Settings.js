@@ -21,6 +21,7 @@ const Settings = () => {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [file, setFile] = useState([]);
+  const [resume, setResume] = useState([])
   const imageUrl = process.env.REACT_APP_IMAGE_URL
 
   const [state, setState] = useState({
@@ -28,6 +29,7 @@ const Settings = () => {
     email: "",
     mobile: "",
     profileImage: null,
+    ResumeDoc :null
   });
   console.log("name", state.name);
   const handelInput = (e) => {
@@ -37,6 +39,8 @@ const Settings = () => {
   const handleImage = (e) => {
     console.log("this is files", e.target.files?.[0]);
     setFile(e.target.files[0]);
+    setResume(e.target.file)
+
   };
   
   console.log("state",state)
@@ -112,6 +116,11 @@ const Settings = () => {
     if (file) {
       formData.append("profileImage", file);
     }
+
+    if (file) {
+      formData.append("ResumeDoc", file);
+    }
+
 
     const response = await dispatch(
       uplodeActions.uplodeRecord({ userId: userId, formData })
@@ -338,6 +347,17 @@ const Settings = () => {
                     </div>
                   </div>
 
+                  <div class="flex flex-col gap-5.5 p-6.5">
+                    <div>
+                      <label class="mb-3 block text-sm font-medium text-black dark:text-white">
+                        Attach file
+                      </label>
+                      <input type="file" onChange={handleImage} name ="ResumeDoc" class="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"/>
+                    </div>
+
+                   
+                  </div>
+
                   {/* <div className="flex justify-end gap-4.5">
                     <button
                       className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
@@ -458,6 +478,14 @@ const Settings = () => {
               </div>
             </div>
           </div>
+        
+
+
+
+
+
+
+
         </div>
       </div>
     </>
