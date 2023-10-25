@@ -5,29 +5,24 @@ const TableOne = () => {
   const baseUrl = process.env.REACT_APP_API_URL;
 
   const [data, setData] = useState([]);
-  console.log("data", data);
+ 
 
   const getProject = async () => {
     try {
-      let token = localStorage.getItem("token");
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
       const userId = userInfo[0]._id;
 
-      const headers = { Authorization: `Bearer ${token}` };
-
       const response = await axios.get(
-
         `http://localhost:3010/api/v1/getRecordById?id=${userId}&page=1&limit=1`
-
-
-       
       );
-      console.log("ProductDelete", response);
+
       setData(response.data.data.data);
+      console.log("Tabledata", response);
     } catch (err) {
       console.log(err);
     }
   };
+ 
 
   // const [team, setTeam] = useState([]);
   // console.log("team", team)
@@ -50,7 +45,7 @@ const TableOne = () => {
     const date = new Date(isoDate);
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear().toString().slice(-2); // Get the last two digits of the year
+    const year = date.getFullYear().toString().slice(-2); 
     return `${day}-${month}-${year}`;
   };
 
@@ -74,7 +69,7 @@ const TableOne = () => {
         </div>
       </div>
 
-      {data.length &&
+      {data &&
         data.map((item) => {
           return (
             <div>
@@ -354,7 +349,7 @@ const TableOne = () => {
             </div>
           </div>
           <div>
-            {data.length &&
+            {data &&
               data.map((item) => {
                 return (
                   <div className="grid grid-cols-3 border-b border-stroke dark:border-strokedark sm:grid-cols-5">
@@ -395,8 +390,6 @@ const TableOne = () => {
       </div>
 
       <div class="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-       
-
         <div class="p-4 sm:p-6 xl:p-7.5">
           <nav>
             <ul class="flex flex-wrap items-center">

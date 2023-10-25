@@ -1,43 +1,44 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import { useParams }  from 'react-router-dom'
+
+import * as Yup from "yup";
 import axios from "axios";
 import Breadcrumb from "../../layout/Breadcrumb";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const AddProject = () => {
+  const { _id } = useParams();
+  console.log("first",_id)
   const baseUrl = process.env.REACT_APP_API_URL;
-  const projectPlan = process.env.REACT_APP_IMAGE_URL;
-  const [createProject, setcreateProject] = useState({
-    projectName: "",
-    branch: "",
-    clientName: "",
-    clientAddress: "",
-    clientEmail: "",
-    clientPhone: "",
-    bdgMember: "",
-    seniorManager: "",
-    manager: "",
-    po: "",
-    scrumMaster: "",
-    tech: "",
-    startDate: "",
-    endDate: "",
-    team: [],
-    projectDocument: null,
-  });
   const [selectedTeamMembers, setSelectedTeamMembers] = useState([]);
-  const [file, setFile] = useState([]);
+  const [file, setFile] = useState(null);
+  const [data, setData] = useState([]);
 
-  const handleprojectDocument = (e) => {
-    const selectedFile = e.target.files[0];
-    setFile(selectedFile);
-  };
+  const validationSchema = Yup.object().shape({
+    projectName: Yup.string().required("Project Name is required"),
+    branch: Yup.string().required("Branch is required"),
+    clientName: Yup.string().required("Client Name is required"),
+    clientAddress: Yup.string().required("Client Address is required"),
+    clientEmail: Yup.string().required("Client Email is required"),
+    clientPhone: Yup.string().required("Client Phone No is required"),
+    bdgMember: Yup.string().required("BDG Member Name is required"),
+    seniorManager: Yup.string().required("SeniorManager Name is required"),
+    manager: Yup.string().required("Manager is required"),
 
-  const handleCreateUser = (e) => {
-    setcreateProject({ ...createProject, [e.target.name]: e.target.value });
-  };
+    tech: Yup.string().required("Tech is required"),
+    startDate: Yup.string().required("Start is required"),
+    endDate: Yup.string().required(" EndDate is required"),
+
+    // po: Yup.string().required("PO is required"),
+    // scrumMaster: Yup.string().required("Scrum Master is required"),
+    //team: Yup.string().required("team is required"),
+  });
+
   const handleTeamMemberSelection = (e) => {
     const selectedMemberId = e.target.value;
+    // Replace 'data' with your actual data source
     const selectedMember = data.find((item) => item._id === selectedMemberId);
 
     if (selectedMember) {
@@ -57,48 +58,10 @@ const AddProject = () => {
     setSelectedTeamMembers(updatedMembers);
   };
 
-  // const addProject = async (e) => {
-  //   try {
-  //     e.preventDefault();
-  //     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-  //     const userId = userInfo[0]._id;
-
-  //     const team = selectedTeamMembers.map((item) => {
-  //       return item._id;
-  //     });
-  //     createProject.team = team;
-  //     console.log("createProject", createProject);
-
-  //     const response = await axios.post(
-  //       `${baseUrl}/crateProduct`,
-  //       createProject
-  //     );
-  //     toast.success("Project Add successful!");
-
-  //     console.log("res data", response);
-
-  //     setcreateProject({
-  //       projectName: "",
-  //       branch: "",
-  //       clientName: "",
-  //       clientAddress: "",
-  //       clientEmail: "",
-  //       clientPhone: "",
-  //       bdgMember: "",
-  //       seniorManager: "",
-  //       manager: "",
-  //       po: "",
-  //       scrumMaster: "",
-  //       tech: "",
-  //       startDate: "",
-  //       endDate: "",
-  //       team: [],
-  //     });
-  //   } catch (error) {}
-  // };
-
-  const [data, setData] = useState([]);
-  const [taskSelected, setTaskSelected] = useState({}); // Keep track of selected tasks
+  const handleprojectDocument = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+  };
 
   const getProject = async () => {
     try {
@@ -114,51 +77,55 @@ const AddProject = () => {
     getProject();
   }, []);
 
-  const uplodeProjectDoc = async (e) => {
-    e.preventDefault();
-    const userinfo = JSON.parse(localStorage.getItem("userInfo"));
-    const userId = userinfo[0]._id;
+  const handleSubmit = async (values) => {
+    try {
+      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      const userId = userInfo[0]._id;
 
-    const team = selectedTeamMembers.map((item) => {
-      return item._id;
-    });
-    createProject.team = team;
-    console.log("create project", createProject);
-    const formData = new FormData();
-    formData.append("projectName", createProject.projectName);
-    formData.append("branch", createProject.branch);
-    formData.append("clientName", createProject.clientName);
-    formData.append("clientAddress", createProject.clientAddress);
-    formData.append("clientEmail", createProject.clientEmail);
-    formData.append("clientPhone", createProject.clientPhone);
-    formData.append("bdgMember", createProject.bdgMember);
-    formData.append("seniorManager", createProject.seniorManager);
-    formData.append("manager", createProject.manager);
-    formData.append("po", createProject.po);
-    formData.append("scrumMaster", createProject.scrumMaster);
-    formData.append("tech", createProject.tech);
-    formData.append("team", JSON.stringify(team));
-    // formData.append("team", team); // Join array elements into a comma-separated string
+      const team = selectedTeamMembers.map((item) => {
+        return item._id;
+      });
 
-    //formData.append("team", JSON.stringify([]));
-    formData.append("startDate", createProject.startDate);
-    formData.append("endDate", createProject.endDate);
+      const formData = new FormData();
+      formData.append("projectName", values.projectName);
+      formData.append("branch", values.branch);
 
-    if (file) {
-      formData.append("projectDocument", file);
+      formData.append("clientName", values.clientName);
+      formData.append("clientAddress", values.clientAddress);
+      formData.append("clientEmail", values.clientEmail);
+      formData.append("clientPhone", values.clientPhone);
+      formData.append("bdgMember", values.bdgMember);
+      formData.append("seniorManager", values.seniorManager);
+      formData.append("manager", values.manager);
+      formData.append("po", values.po);
+      formData.append("scrumMaster", values.scrumMaster);
+      formData.append("tech", values.tech);
+
+      // Add other form fields to the formData
+      formData.append("team", JSON.stringify(team));
+
+      if (file) {
+        formData.append("projectDocument", file);
+      }
+
+      const response = await axios.post(`${baseUrl}/crateProduct`, formData);
+      toast.success("Project Add successful!");
+
+      console.log("response", response);
+
+      setSelectedTeamMembers([]);
+      setFile(null);
+    } catch (error) {
+      // Handle errors
     }
-
-    console.log("FormData Content: ", formData);
-
-    const response = await axios.post(`${baseUrl}/crateProduct`, formData);
-    toast.success("Project Add successful!");
-    console.log("response", response);
   };
+
+  // value={createProject.scrumMaster}
+  // onChange={handleCreateUser}
 
   return (
     <>
       <Breadcrumb pageName="Add Project" />
-
       <div className="grid grid-cols-4 gap-9 sm:grid-cols-1">
         <ToastContainer
           position="top-right"
@@ -174,266 +141,547 @@ const AddProject = () => {
         />
 
         <div className="flex flex-col gap-9">
-          {/* <!-- Contact Form --> */}
           <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
             <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
               <h3 className="font-medium text-black dark:text-white">
                 Add Project
               </h3>
             </div>
-            <form action="#">
-              <div className="p-6.5">
-                <div className="flex mb-4.5">
-                  <div className="w-1/2">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Project Name
-                    </label>
-                    <input
-                      type="text"
-                      onChange={handleCreateUser}
-                      name="projectName"
-                      value={createProject.projectName}
-                      placeholder="New Project Name"
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-                  <div className="w-1/2 pl-4">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Branch
-                    </label>
-                    <input
-                      type="text"
-                      name="branch"
-                      onChange={handleCreateUser}
-                      value={createProject.branch}
-                      placeholder="Enter Branch Name"
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-                </div>
-                <div className="flex mb-4.5">
-                  <div className="w-1/2">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Client Name
-                    </label>
-                    <input
-                      type="text"
-                      name="clientName"
-                      onChange={handleCreateUser}
-                      value={createProject.clientName}
-                      placeholder="Enter Client Name"
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-                  <div className="w-1/2 pl-4">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Client Address
-                    </label>
-                    <input
-                      type="text"
-                      name="clientAddress"
-                      onChange={handleCreateUser}
-                      value={createProject.clientAddress}
-                      placeholder="Enter Client Address"
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-                </div>
+            <Formik
+              initialValues={{
+                projectName: "",
+                branch: "",
+                clientName: "",
+                clientAddress: "",
+                clientEmail: "",
+                clientPhone: "",
+                bdgMember: "",
+                seniorManager: "",
+                manager: "",
+                po: "",
+                scrumMaster: "",
+                tech: "",
+                startDate: "",
+                endDate: "",
+                team: [],
+                id:""
+              }}
+              validationSchema={validationSchema}
+              onSubmit={(values) => handleSubmit(values)}
+            >
+              {({ values, handleChange, handleBlur, touched }) => (
+                <Form>
+                  <div className="p-6.5">
+                    <div className="flex mb-4.5">
+                      <div className="w-1/2">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          Project Name
+                        </label>
 
-                <div className="flex mb-4.5">
-                  <div className="w-1/2 pr-4">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Manager
-                    </label>
-                    <input
-                      type="text"
-                      name="manager"
-                      onChange={handleCreateUser}
-                      value={createProject.manager}
-                      placeholder="Enter Manager"
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-                  <div className="w-1/2">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Tech
-                    </label>
-                    <input
-                      type="text"
-                      name="tech"
-                      onChange={handleCreateUser}
-                      value={createProject.tech}
-                      placeholder="Enter"
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-                </div>
-                <div className="mb-4.5 flex">
-                  <div className="w-1/2 pr-4">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      PO
-                    </label>
-                    <div className="relative z-20 bg-transparent dark:bg-form-input">
-                      <select
-                        className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                        name="po"
-                        value={createProject.po}
-                        onChange={handleCreateUser}
+                        <Field
+                          type="text"
+                          name="projectName"
+                          placeholder="Enter Project Name"
+                          className={`
+    w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+    focus:border-blue-500
+    ${
+      touched.projectName && !values.projectName
+        ? "border-meta-1"
+        : "border-primary"
+    }
+    disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+    dark:bg-form-input dark:focus-border-primary
+  `}
+                        />
+
+                        <ErrorMessage
+                          name="projectName"
+                          component="div"
+                          className="text-meta-1 text-sm"
+                        />
+                      </div>
+                      <div className="w-1/2 pl-4">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          Branch
+                        </label>
+
+                        <Field
+                          type="text"
+                          name="branch"
+                          placeholder="Enter Branch Name"
+                          className={`
+    w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+    focus:border-blue-500
+    ${touched.branch && !values.branch ? "border-meta-1" : "border-primary"}
+    disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+    dark:bg-form-input dark:focus-border-primary
+  `}
+                        />
+
+                        <ErrorMessage
+                          name="branch"
+                          component="div"
+                          className="text-meta-1 text-sm"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex mb-4.5">
+                      <div className="w-1/2">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          Client Name
+                        </label>
+
+                        <Field
+                          type="text"
+                          name="clientName"
+                          placeholder="Enter Client Name"
+                          className={`
+    w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+    focus:border-blue-500
+    ${
+      touched.clientName && !values.clientName
+        ? "border-meta-1"
+        : "border-primary"
+    }
+    disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+    dark:bg-form-input dark:focus-border-primary
+  `}
+                        />
+
+                        <ErrorMessage
+                          name="clientName"
+                          component="div"
+                          className="text-meta-1 text-sm"
+                        />
+                      </div>
+
+                      <div className="w-1/2 pl-4">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          Client Email
+                        </label>
+
+                        <Field
+                          type="text"
+                          name="clientEmail"
+                          placeholder="Enter Client Email"
+                          className={`
+    w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+    focus:border-blue-500
+    ${
+      touched.clientEmail && !values.clientEmail
+        ? "border-meta-1"
+        : "border-primary"
+    }
+    disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+    dark:bg-form-input dark:focus-border-primary
+  `}
+                        />
+
+                        <ErrorMessage
+                          name="clientEmail"
+                          component="div"
+                          className="text-meta-1 text-sm"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex mb-4.5">
+                      <div className="w-1/2 pl-4">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          Client Address
+                        </label>
+
+                        <Field
+                          type="text"
+                          name="clientAddress"
+                          placeholder="Enter Client Address"
+                          className={`
+    w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+    focus:border-blue-500
+    ${
+      touched.clientAddress && !values.clientAddress
+        ? "border-meta-1"
+        : "border-primary"
+    }
+    disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+    dark:bg-form-input dark:focus-border-primary
+  `}
+                        />
+
+                        <ErrorMessage
+                          name="clientAddress"
+                          component="div"
+                          className="text-meta-1 text-sm"
+                        />
+                      </div>
+
+                      <div className="w-1/2 pl-4">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          Client Phone
+                        </label>
+
+                        <Field
+                          type="text"
+                          name="clientPhone"
+                          placeholder="Enter Client Phone"
+                          className={`
+    w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+    focus:border-blue-500
+    ${
+      touched.clientPhone && !values.clientPhone
+        ? "border-meta-1"
+        : "border-primary"
+    }
+    disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+    dark:bg-form-input dark:focus-border-primary
+  `}
+                        />
+
+                        <ErrorMessage
+                          name="clientPhone"
+                          component="div"
+                          className="text-meta-1 text-sm"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex mb-4.5">
+                      <div className="w-1/2 pl-4">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          Senior Manager
+                        </label>
+
+                        <Field
+                          type="text"
+                          name="seniorManager"
+                          placeholder="Enter  Senior Manager"
+                          className={`
+    w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+    focus:border-blue-500
+    ${
+      touched.seniorManager && !values.seniorManager
+        ? "border-meta-1"
+        : "border-primary"
+    }
+    disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+    dark:bg-form-input dark:focus-border-primary
+  `}
+                        />
+
+                        <ErrorMessage
+                          name="seniorManager"
+                          component="div"
+                          className="text-meta-1 text-sm"
+                        />
+                      </div>
+                      <div className="w-1/2 pl-4">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          BDG Member
+                        </label>
+
+                        <Field
+                          type="text"
+                          name="bdgMember"
+                          placeholder="Enter BDG Member "
+                          className={`
+    w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+    focus:border-blue-500
+    ${
+      touched.bdgMember && !values.bdgMember
+        ? "border-meta-1"
+        : "border-primary"
+    }
+    disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+    dark:bg-form-input dark:focus-border-primary
+  `}
+                        />
+
+                        <ErrorMessage
+                          name="bdgMember"
+                          component="div"
+                          className="text-meta-1 text-sm"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex mb-4.5">
+                      <div className="w-1/2 pl-4">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          Manager
+                        </label>
+
+                        <Field
+                          type="text"
+                          name="manager"
+                          placeholder="Enter Manager "
+                          className={`
+    w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+    focus:border-blue-500
+    ${touched.manager && !values.manager ? "border-meta-1" : "border-primary"}
+    disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+    dark:bg-form-input dark:focus-border-primary
+  `}
+                        />
+
+                        <ErrorMessage
+                          name="manager"
+                          component="div"
+                          className="text-meta-1 text-sm"
+                        />
+                      </div>
+                      <div className="w-1/2 pl-4">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          Tech
+                        </label>
+                        <Field
+                          type="text"
+                          name="tech"
+                          placeholder="Enter Tech "
+                          className={`
+    w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+    focus:border-blue-500
+    ${touched.tech && !values.tech ? "border-meta-1" : "border-primary"}
+    disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+    dark:bg-form-input dark:focus-border-primary
+  `}
+                        />
+                        <ErrorMessage
+                          name="tech"
+                          component="div"
+                          className="text-meta-1 text-sm"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex mb-4.5">
+                      <div className="w-1/2 pl-4">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          Start Date
+                        </label>
+
+                        <Field
+                          type="date"
+                          name="startDate"
+                          placeholder="Enter Start Date "
+                          className={`
+    w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+    focus:border-blue-500
+    ${
+      touched.startDate && !values.startDate
+        ? "border-meta-1"
+        : "border-primary"
+    }
+    disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+    dark:bg-form-input dark:focus-border-primary
+  `}
+                        />
+
+                        <ErrorMessage
+                          name="startDate"
+                          component="div"
+                          className="text-meta-1 text-sm"
+                        />
+                      </div>
+                      <div className="w-1/2 pl-4">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          End Date
+                        </label>
+
+                        <Field
+                          type="date"
+                          name="endDate"
+                          placeholder="Enter End Date "
+                          className={`
+    w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+    focus:border-blue-500
+    ${touched.endDate && !values.endDate ? "border-meta-1" : "border-primary"}
+    disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+    dark:bg-form-input dark:focus-border-primary
+  `}
+                        />
+
+                        <ErrorMessage
+                          name="endDate"
+                          component="div"
+                          className="text-meta-1 text-sm"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex mb-4.5">
+                      <div className="w-1/2 pr-4">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          PO
+                        </label>
+                        <div className="relative z-20 bg-transparent dark:bg-form-input">
+                          <Field
+                            as="select"
+                            className={`
+                            w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+                            focus:border-blue-500
+                            ${
+                              touched.po && !values.po
+                                ? "border-meta-1"
+                                : "border-primary"
+                            }
+                            disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+                            dark:bg-form-input dark:focus-border-primary
+                          `}
+                            name="po"
+                          >
+                            <option value="">Po</option>
+                            {data.map((item) => (
+                              <option key={item._id} value={item._id}>
+                                {item.name}
+                              </option>
+                            ))}
+                          </Field>
+
+                          <ErrorMessage
+                            name="po"
+                            component="div"
+                            className="text-meta-1 text-sm"
+                          />
+
+                          <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
+                            <svg
+                              className="fill-current"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g opacity="0.8">
+                                <path
+                                  fillRule="evenodd"
+                                  clipRule="evenodd"
+                                  d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                                  fill=""
+                                ></path>
+                              </g>
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                      <div className="w-1/2">
+                        <label className="mb-2.5 block text-black dark:text-white">
+                          Scrum Master
+                        </label>
+                        <div className="relative z-20 bg-transparent dark:bg-form-input">
+                          <Field
+                            as="select"
+                            className={`
+                            w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+                            focus:border-blue-500
+                            ${
+                              touched.scrumMaster && !values.scrumMaster
+                                ? "border-meta-1"
+                                : "border-primary"
+                            }
+                            disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+                            dark:bg-form-input dark:focus-border-primary
+                          `}
+                            name="scrumMaster"
+                          >
+                            <option value="">Scrum Master</option>
+                            {data.map((item) => (
+                              <option key={item._id} value={item._id}>
+                                {item.name}
+                              </option>
+                            ))}
+                          </Field>
+                          <ErrorMessage
+                            name="scrumMaster"
+                            component="div"
+                            className="text-meta-1 text-sm"
+                          />
+
+                          <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
+                            <svg
+                              className="fill-current"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g opacity="0.8">
+                                <path
+                                  fillRule="evenodd"
+                                  clipRule="evenodd"
+                                  d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
+                                  fill=""
+                                ></path>
+                              </g>
+                            </svg>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="relative z-20 bg-transparent dark.bg-form-input">
+                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                        Select Team Members
+                      </label>
+                      <Field
+                        as="select"
+                        className={`
+                        w-full rounded border-[1.5px] bg-transparent py-3 px-5 font-medium outline-none transition
+                        focus:border-blue-500
+                        ${
+                          touched.team && !values.team
+                            ? "border-meta-1"
+                            : "border-primary"
+                        }
+                        disabled:cursor-default disabled:bg-white dark:border-form-strokedark
+                        dark:bg-form-input dark:focus-border-primary
+                      `}
+                        name="team"
+                        onChange={handleTeamMemberSelection}
                       >
-                        <option value="">Select PO</option>
+                        <option value="">Select Team Member</option>
                         {data.map((item) => (
                           <option key={item._id} value={item._id}>
                             {item.name}
                           </option>
                         ))}
-                      </select>
-
-                      <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
-                        <svg
-                          className="fill-current"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g opacity="0.8">
-                            <path
-                              fillRule="evenodd"
-                              clipRule="evenodd"
-                              d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
-                              fill=""
-                            ></path>
-                          </g>
-                        </svg>
-                      </span>
+                      </Field>
+                      <ErrorMessage
+                        name="team"
+                        component="div"
+                        className="text-meta-1 text-sm"
+                      />
                     </div>
-                  </div>
-                  <div className="w-1/2">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Scrum Master
-                    </label>
-                    <div className="relative z-20 bg-transparent dark:bg-form-input">
-                      <select
-                        className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                        name="scrumMaster"
-                        value={createProject.scrumMaster}
-                        onChange={handleCreateUser}
-                      >
-                        <option value="">Select SM</option>
-                        {data.map((item) => (
-                          <option key={item._id} value={item._id}>
-                            {item.name}
-                          </option>
+                    <div>
+                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                        Selected Team Members
+                      </label>
+                      {/* <div className="flex flex-wrap items-center">
+                        {selectedTeamMembers.map((member) => (
+                          <div
+                            key={member._id}
+                            className="flex items-center m-1 px-3 py-2 bg-meta-3 text-white rounded-full text-sm"
+                          >
+                            {member.name}
+                            <button
+                              type="button"
+                              onClick={() =>
+                                removeSelectedTeamMember(member._id)
+                              }
+                              className="ml-2 text-xs font-medium cursor-pointer"
+                            ></button>
+                          </div>
                         ))}
-                      </select>
+                      </div> */}
 
-                      <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
-                        <svg
-                          className="fill-current"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g opacity="0.8">
-                            <path
-                              fillRule="evenodd"
-                              clipRule="evenodd"
-                              d="M5.29289 8.29289C5.68342 7.90237 6.31658 7.90237 6.70711 8.29289L12 13.5858L17.2929 8.29289C17.6834 7.90237 18.3166 7.90237 18.7071 8.29289C19.0976 8.68342 19.0976 9.31658 18.7071 9.70711L12.7071 15.7071C12.3166 16.0976 11.6834 16.0976 11.2929 15.7071L5.29289 9.70711C4.90237 9.31658 4.90237 8.68342 5.29289 8.29289Z"
-                              fill=""
-                            ></path>
-                          </g>
-                        </svg>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex mb-4.5">
-                  <div className="w-1/2 pr-4">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Client Email
-                    </label>
-                    <input
-                      type="text"
-                      name="clientEmail"
-                      onChange={handleCreateUser}
-                      value={createProject.clientEmail}
-                      placeholder="Enter Client Email"
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-                  <div className="w-1/2">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Client Phone Number
-                    </label>
-                    <input
-                      type="text"
-                      name="clientPhone"
-                      onChange={handleCreateUser}
-                      value={createProject.clientPhone}
-                      placeholder="Enter Client Phone Number"
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-                </div>
 
-                <div className="flex mb-4.5">
-                  <div className="w-1/2 pr-4">
-                    <label className="mb-2.5 block text-black dark:text-white w-1/3 label-break">
-                      Start Date <span className="text-meta-1">*</span>
-                    </label>
-                    <input
-                      type="date"
-                      onChange={handleCreateUser}
-                      name="startDate"
-                      value={createProject.startDate}
-                      className="w-2/3 rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-                  <div className="w-1/2">
-                    <label className="mb-2.5 block text-black dark:text-white w-1/3">
-                      End Date <span className="text-meta-1">*</span>
-                    </label>
-                    <input
-                      type="date"
-                      onChange={handleCreateUser}
-                      name="endDate"
-                      value={createProject.endDate}
-                      className="w-2/3 ml-2 rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark.bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-                </div>
-
-                <div className="relative z-20 bg-transparent dark:bg-form-input">
-                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Select Team Members
-                  </label>
-
-                  <select
-                    className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    name="team"
-                    onChange={handleTeamMemberSelection}
-                  >
-                    <option value="">Select Team Member</option>
-                    {data.map((item) => (
-                      <option key={item._id} value={item._id}>
-                        {item.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                    Selected Team Members
-                  </label>
-                  <div className="flex flex-wrap items-center">
+                      <div className="flex flex-wrap items-center">
                     {selectedTeamMembers.map((member) => (
                       <span
                         key={member._id}
-                        value={createProject.team}
-                        onChange={handleCreateUser}
+                        value={values.team}
+                       // onChange={handleCreateUser}
                         className="m-1.5 flex items-center justify-center rounded border-[.5px] border-stroke bg-gray py-1.5 px-2.5 text-sm font-medium dark:border-strokedark dark:bg-white/30"
                       >
                         {member.name}
@@ -459,75 +707,37 @@ const AddProject = () => {
                       </span>
                     ))}
                   </div>
-                </div>
 
-                <div class="mb-5">
-                  <label
-                    for="taskDescription"
-                    class="mb-2.5 block font-medium text-black dark:text-white"
-                  >
-                    Task description
-                  </label>
-                  <textarea
-                    name="description"
-                    onChange={handleCreateUser}
-                    value={createProject.description}
-                    id="taskDescription"
-                    cols="30"
-                    rows="7"
-                    placeholder="Enter task description"
-                    class="w-full rounded-sm border border-stroke bg-white py-3 px-4.5 focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-boxdark dark:focus:border-primary"
-                  ></textarea>
-                </div>
-                <div className="mb-4.5 flex">
-                  <div className="w-1/2 pr-4">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      BDG Member
-                    </label>
-                    <input
-                      type="text"
-                      name="bdgMember"
-                      onChange={handleCreateUser}
-                      value={createProject.bdgMember}
-                      placeholder="Enter BDG Member"
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
+
+
+
+
+
+
+
+
+                    </div>
+                    <div className="mt-4.5">
+                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                        Upload Project Document
+                      </label>
+                      <input
+                        type="file"
+                        //accept=".pdf, .doc, .docx"
+                        name="projectDocument"
+                        onChange={handleprojectDocument}
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="flex w-full justify-center rounded bg-primary p-3 font-medium text-white"
+                    >
+                      Add Project
+                    </button>
                   </div>
-                  <div className="w-1/2">
-                    <label className="mb-2.5 block text-black dark:text-white">
-                      Senior Manager
-                    </label>
-                    <input
-                      type="text"
-                      name="seniorManager"
-                      onChange={handleCreateUser}
-                      value={createProject.seniorManager}
-                      placeholder="Enter Senior Manager"
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                    />
-                  </div>
-                </div>
-                <div class="flex flex-col gap-5.5 p-6.5">
-                  <div>
-                    <label class="mb-3 block text-sm font-medium text-black dark:text-white">
-                      Attach file
-                    </label>
-                    <input
-                      type="file"
-                      class="w-full cursor-pointer rounded-lg border-[1.5px] border-stroke bg-transparent font-medium outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-whiter file:py-3 file:px-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:file:border-form-strokedark dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
-                      name="projectDocument"
-                      onChange={handleprojectDocument}
-                    />
-                  </div>
-                </div>
-                <button
-                  className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray"
-                  onClick={uplodeProjectDoc}
-                >
-                  Add Projects
-                </button>
-              </div>
-            </form>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       </div>

@@ -4,16 +4,14 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-
 const FormLayout = () => {
   const baseUrl = process.env.REACT_APP_API_URL;
   const [createUser, setcreateUser] = useState({
-    name:"",
+    name: "",
     email: "",
     password: "",
     userType: "",
   });
-  
 
   const handlecrateUser = (e) => {
     setcreateUser({ ...createUser, [e.target.name]: e.target.value });
@@ -23,19 +21,18 @@ const FormLayout = () => {
     try {
       e.preventDefault();
       const response = await axios.post(`${baseUrl}/creatUser`, createUser);
-   
-      
+
       toast.success(" user add successful!");
       setcreateUser({
-        name:"",
+        name: "",
         email: "",
         password: "",
         userType: "",
-        totalProject:"",
-     
-totalExprince:"",
-activeProject:""
-      })
+        totalProject: "",
+
+        totalExprince: "",
+        activeProject: "",
+      });
 
       console.log("res data", response);
     } catch (error) {}
@@ -71,11 +68,6 @@ activeProject:""
               <div className="p-6.5">
                 <div className="mb-4.5 flex flex-col gap-6 xl:flex-row"></div>
 
-
-
-
-
-
                 <div className="mb-4.5">
                   <label className="mb-2.5 block text-black dark:text-white">
                     Name <span className="text-meta-1">*</span>
@@ -83,13 +75,12 @@ activeProject:""
                   <input
                     type="email"
                     onChange={handlecrateUser}
-                    name ="name"
+                    name="name"
                     value={createUser.name}
                     placeholder="Enter your Name"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   />
                 </div>
-
 
                 <div className="mb-4.5">
                   <label className="mb-2.5 block text-black dark:text-white">
@@ -98,7 +89,7 @@ activeProject:""
                   <input
                     type="email"
                     onChange={handlecrateUser}
-                    name ="email"
+                    name="email"
                     value={createUser.email}
                     placeholder="Enter your email address"
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -111,7 +102,7 @@ activeProject:""
                   </label>
                   <input
                     type="text"
-                    name ="password"
+                    name="password"
                     onChange={handlecrateUser}
                     value={createUser.password}
                     placeholder="Enter your Password "
@@ -119,14 +110,13 @@ activeProject:""
                   />
                 </div>
 
-
                 <div className="mb-4.5">
                   <label className="mb-2.5 block text-black dark:text-white">
-                  Active Project
+                    Active Project
                   </label>
                   <input
                     type="text"
-                    name ="activeProject"
+                    name="activeProject"
                     onChange={handlecrateUser}
                     value={createUser.activeProject}
                     placeholder="Enter your ActiveProject "
@@ -135,11 +125,11 @@ activeProject:""
                 </div>
                 <div className="mb-4.5">
                   <label className="mb-2.5 block text-black dark:text-white">
-                  Total Exprince
+                    Total Exprince
                   </label>
                   <input
                     type="text"
-                    name ="totalExprince"
+                    name="totalExprince"
                     onChange={handlecrateUser}
                     value={createUser.totalExprince}
                     placeholder="Enter your Total Experince "
@@ -148,24 +138,17 @@ activeProject:""
                 </div>
                 <div className="mb-4.5">
                   <label className="mb-2.5 block text-black dark:text-white">
-                  Total Project
+                    Total Project
                   </label>
                   <input
                     type="text"
-                    name ="totalProject"
+                    name="totalProject"
                     onChange={handlecrateUser}
                     value={createUser.totalProject}
                     placeholder="Enter your TotalProject "
                     className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                   />
                 </div>
-
-
-
-
-
-
-
 
                 <div className="mb-4.5">
                   <label className="mb-2.5 block text-black dark:text-white">
@@ -174,7 +157,8 @@ activeProject:""
                   <div className="relative z-20 bg-transparent dark:bg-form-input">
                     <select
                       className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                      name="userType" onChange={handlecrateUser}
+                      name="userType"
+                      onChange={handlecrateUser}
                     >
                       <option value="">Type of User</option>
                       <option value="2">Operater</option>
@@ -204,12 +188,6 @@ activeProject:""
                   </div>
                 </div>
 
-
-
-
-
-                
-
                 <button
                   className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray"
                   onClick={addUser}
@@ -226,4 +204,3 @@ activeProject:""
 };
 
 export default FormLayout;
-

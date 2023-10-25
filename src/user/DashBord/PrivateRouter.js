@@ -8,9 +8,11 @@ import Sidebar from "../layout/Siderbar";
 const PrivateRouteUser = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  let userInfo = localStorage.getItem("userInfo");
+  const userinfo = JSON.parse(localStorage.getItem("userInfo"));
+const userType=userinfo[0].userType
+  
 
-  if (userInfo[0]?.userType == 5) {
+  if (userType!=2) {
     return <Navigate to="/AdminLogin" />;
   }
 

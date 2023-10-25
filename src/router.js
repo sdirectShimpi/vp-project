@@ -19,6 +19,10 @@ import AddProject from "./user/layout/AddProject";
 import ShowAllProject from "./user/layout/ShowAllProject";
 import ChatApp from "./layout/Component/ChatApp";
 import JoinRoom from "./layout/Component/JoinRoom";
+import ChangePassword from "./layout/ChangePassword";
+import UpdateComponent from "./user/layout/UpdateComponent";
+import ImplementDSR from "./layout/Page/ImplementDSR";
+import MyStatus from "./layout/Page/MyStatus";
 
 
 //export const userAuth = JSON.parse(localStorage.getItem("userInfo"));
@@ -80,7 +84,23 @@ export const router = createBrowserRouter([
         element:<ToDOList/>,
         exact: true
       },
+      {
+        path :"changePassword",
+        element:<ChangePassword/>,
+        exact: true
+      },
+
+      {
+        path :"dsrImplemnt",
+        element:<ImplementDSR/>,
+        exact: true
+      },
      
+      {
+        path :"mystatus",
+        element:<MyStatus/>,
+        exact: true
+      },
 
 ],
 },
@@ -106,6 +126,16 @@ export const router = createBrowserRouter([
 
 
     },
+
+    {
+      path:"update/:id",
+      element:<UpdateComponent/>,
+      exact: true
+
+
+    },
+
+
     {
       path:"showProject",
       element:<ShowAllProject/>,
